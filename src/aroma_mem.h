@@ -23,37 +23,41 @@
 #define __CURR_FILE() __FILE__
 #define __CURR_LINE() __LINE__
 
-void * aroma_malloc(size_t size
+void *aroma_malloc(
+    size_t size
 #ifndef _AROMA_NODEBUG
-                    , long line, char * filename
+    ,
+    long line, char *filename
 #endif
-                   );
+);
 
-void * aroma_realloc(void * x, size_t size
+void *aroma_realloc(
+    void *x, size_t size
 #ifndef _AROMA_NODEBUG
-                     , long line, char * filename
+    ,
+    long line, char *filename
 #endif
-                    );
+);
 
 void aroma_memory_parentpid(int parent_pid);
-void aroma_memory_terminate(const char * message);
+void aroma_memory_terminate(const char *message);
 
 #ifndef malloc
 
-#ifndef _AROMA_NODEBUG
-#define malloc(x) aroma_malloc(x,__CURR_LINE(), __CURR_FILE())
-#else
-#define malloc(x) aroma_malloc(x)
-#endif
+#	ifndef _AROMA_NODEBUG
+#		define malloc(x) aroma_malloc(x, __CURR_LINE(), __CURR_FILE())
+#	else
+#		define malloc(x) aroma_malloc(x)
+#	endif
 
-#ifndef _AROMA_NODEBUG
-#define realloc(x,s) aroma_realloc(x,s,__CURR_LINE(), __CURR_FILE())
-#else
-#define realloc(x,s) aroma_realloc(x,s)
-#endif
+#	ifndef _AROMA_NODEBUG
+#		define realloc(x, s) aroma_realloc(x, s, __CURR_LINE(), __CURR_FILE())
+#	else
+#		define realloc(x, s) aroma_realloc(x, s)
+#	endif
 
-void aroma_free(void ** x);
-#define free(x) aroma_free((void **) &x)
+void aroma_free(void **x);
+#	define free(x) aroma_free((void **)&x)
 
 #endif
 

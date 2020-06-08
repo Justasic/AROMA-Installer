@@ -31,66 +31,64 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-
 /* Tokens.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
+#	define YYTOKENTYPE
 /* Put the tokens into the symbol table, so that GDB and other debuggers
    know about them.  */
-enum yytokentype {
-  AND = 258,
-  OR = 259,
-  SUBSTR = 260,
-  SUPERSTR = 261,
-  EQ = 262,
-  NE = 263,
-  IF = 264,
-  THEN = 265,
-  ELSE = 266,
-  ENDIF = 267,
-  STRING = 268,
-  BAD = 269
+enum yytokentype
+{
+	AND      = 258,
+	OR       = 259,
+	SUBSTR   = 260,
+	SUPERSTR = 261,
+	EQ       = 262,
+	NE       = 263,
+	IF       = 264,
+	THEN     = 265,
+	ELSE     = 266,
+	ENDIF    = 267,
+	STRING   = 268,
+	BAD      = 269
 };
 #endif
 
+#if !defined YYSTYPE && !defined YYSTYPE_IS_DECLARED
+typedef union YYSTYPE
+{
 
+	/* Line 1685 of yacc.c  */
+#	line 36 "./parser.y"
 
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE {
+	char* str;
+	Expr* expr;
+	struct
+	{
+		int    argc;
+		Expr** argv;
+	} args;
 
-  /* Line 1685 of yacc.c  */
-#line 36 "./parser.y"
-  
-  char * str;
-  Expr * expr;
-  struct {
-    int argc;
-    Expr ** argv;
-  } args;
-  
-  
-  
-  /* Line 1685 of yacc.c  */
-#line 76 "parser.h"
+	/* Line 1685 of yacc.c  */
+#	line 76 "parser.h"
 } YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
+#	define YYSTYPE_IS_TRIVIAL 1
+#	define yystype YYSTYPE /* obsolescent; will be withdrawn */
+#	define YYSTYPE_IS_DECLARED 1
 #endif
 
 extern YYSTYPE yylval;
 
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE {
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
+#if !defined YYLTYPE && !defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+	int first_line;
+	int first_column;
+	int last_line;
+	int last_column;
 } YYLTYPE;
-# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
+#	define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+#	define YYLTYPE_IS_DECLARED 1
+#	define YYLTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYLTYPE yylloc;
-
