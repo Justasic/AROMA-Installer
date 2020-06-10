@@ -32,9 +32,7 @@ static ZipArchive zip;
 byte az_init(const char* filename)
 {
 	if (mzOpenZipArchive(filename, &zip) != 0)
-	{
 		return 0;
-	}
 
 	mkdir(AROMA_TMP, 755);
 	return 1;
@@ -54,9 +52,7 @@ byte az_readmem(AZMEM* out, const char* zpath, byte bytesafe)
 	const ZipEntry* se = mzFindZipEntry(&zip, z_path);
 
 	if (se == NULL)
-	{
 		return 0;
-	}
 
 	out->sz   = se->uncompLen + (bytesafe ? 0 : 1);
 	out->data = malloc(out->sz);
@@ -69,9 +65,7 @@ byte az_readmem(AZMEM* out, const char* zpath, byte bytesafe)
 	}
 
 	if (!bytesafe)
-	{
 		out->data[se->uncompLen] = '\0';
-	}
 
 	return 1;
 }
@@ -82,17 +76,13 @@ byte az_extract(const char* zpath, const char* dest)
 	const ZipEntry* zdata = mzFindZipEntry(&zip, zpath);
 
 	if (zdata == NULL)
-	{
 		return 0;
-	}
 
 	unlink(dest);
 	int fd = creat(dest, 0755);
 
 	if (fd < 0)
-	{
 		return 0;
-	}
 
 	byte ok = mzExtractZipEntryToFile(&zip, zdata, fd);
 	close(fd);

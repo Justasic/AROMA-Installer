@@ -104,14 +104,10 @@ void acmenu_redrawitem(ACONTROLP ctl, int index)
 	ACMENUDP d = (ACMENUDP)ctl->d;
 
 	if (d->acheck_signature != 144)
-	{
 		return; //-- Not Valid Signature
-	}
 
 	if ((index >= d->itemn) || (index < 0))
-	{
 		return; //-- Not Valid Index
-	}
 
 	ACMENUIP p = d->items[index];
 	CANVAS * c = &d->client;
@@ -163,14 +159,10 @@ void acmenu_redrawitem(ACONTROLP ctl, int index)
 		int imgH = p->img->h;
 
 		if (imgW > imgS)
-		{
 			imgW = imgS;
-		}
 
 		if (imgH > imgS)
-		{
 			imgH = imgS;
-		}
 
 		int imgX = round((imgS - imgW) / 2);
 		int imgY = round((imgS - imgH) / 2) + (agdp() * 2);
@@ -181,9 +173,7 @@ void acmenu_redrawitem(ACONTROLP ctl, int index)
 	int txtAddY = 0;
 
 	if (txtH < imgS)
-	{
 		txtAddY = round((imgS - txtH) / 2);
-	}
 
 	//-- Now Draw The Text
 	if (isselectcolor)
@@ -201,9 +191,7 @@ void acmenu_redraw(ACONTROLP ctl)
 	ACMENUDP d = (ACMENUDP)ctl->d;
 
 	if (d->acheck_signature != 144)
-	{
 		return; //-- Not Valid Signature
-	}
 
 	if ((d->itemn > 0) && (d->draweditemn < d->itemn))
 	{
@@ -215,17 +203,13 @@ void acmenu_redraw(ACONTROLP ctl)
 		d->maxScrollY = d->nextY - (ctl->h - (agdp() * max(acfg()->roundsz, 4)));
 
 		if (d->maxScrollY < 0)
-		{
 			d->maxScrollY = 0;
-		}
 
 		//-- Draw Items
 		int i;
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			acmenu_redrawitem(ctl, i);
-		}
 
 		d->draweditemn = d->itemn;
 	}
@@ -236,9 +220,7 @@ int acmenu_getselectedindex(ACONTROLP ctl)
 	ACMENUDP d = (ACMENUDP)ctl->d;
 
 	if (d->acheck_signature != 144)
-	{
 		return -1; //-- Not Valid Signature
-	}
 
 	return d->selectedIndex;
 }
@@ -249,9 +231,7 @@ byte acmenu_add(ACONTROLP ctl, char *title, char *desc, char *img)
 	ACMENUDP d = (ACMENUDP)ctl->d;
 
 	if (d->acheck_signature != 144)
-	{
 		return 0; //-- Not Valid Signature
-	}
 
 	//-- Allocating Memory For Item Data
 	ACMENUIP newip = (ACMENUIP)malloc(sizeof(ACMENUI));
@@ -274,9 +254,7 @@ byte acmenu_add(ACONTROLP ctl, char *title, char *desc, char *img)
 	newip->h  = (agdp() * 4) + newip->dh + newip->th;
 
 	if (newip->h < (agdp() * 34))
-	{
 		newip->h = (agdp() * 34);
-	}
 
 	newip->id = d->itemn;
 	newip->y  = d->nextY;
@@ -346,23 +324,17 @@ void acmenu_ondraw(void *x)
 		int  add_t_y = 1;
 
 		if (d->focused)
-		{
 			add_t_y = agdp();
-		}
 
 		for (i = 0; i < agdpX; i++)
 		{
 			byte alph = 255 - round((((float)(i + 1)) / ((float)agdpX)) * 230);
 
 			if (isST)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ctl->y + i + add_t_y, ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 
 			if (isSB)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ((ctl->y + ctl->h) - (add_t_y)) - (i + 1), ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 		}
 
 		if (d->maxScrollY > 0)
@@ -379,9 +351,7 @@ void acmenu_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
@@ -391,16 +361,12 @@ void acmenu_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY - d->maxScrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
 			else
-			{
 				ag_rect(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar);
-			}
 		}
 	}
 }
@@ -465,9 +431,7 @@ dword acmenu_oninput(void *x, int action, ATEV *atev)
 						d->selectedIndex = i;
 
 						if ((prevfocus != -1) && (prevfocus != i))
-						{
 							acmenu_redrawitem(ctl, prevfocus);
-						}
 
 						acmenu_redrawitem(ctl, i);
 						ctl->ondraw(ctl);
@@ -480,20 +444,14 @@ dword acmenu_oninput(void *x, int action, ATEV *atev)
 				}
 
 				if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
 			else if (d->maxScrollY > 0)
 			{
 				if (akinetic_uphandler(&d->akin, atev->y))
-				{
 					ac_regfling(ctl, &d->akin, &d->scrollY, d->maxScrollY);
-				}
 				else if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
 
 			if (d->touchedItem != -1)
@@ -530,9 +488,7 @@ dword acmenu_oninput(void *x, int action, ATEV *atev)
 						}
 					}
 					else
-					{
 						allowscroll = 0;
-					}
 				}
 
 				if ((allowscroll) && (d->maxScrollY > 0))
@@ -552,19 +508,13 @@ dword acmenu_oninput(void *x, int action, ATEV *atev)
 							d->scrollY += floor(mv * dumpsz);
 						}
 						else
-						{
 							d->scrollY += mv;
-						}
 
 						if (d->scrollY < 0 - (ctl->h / 4))
-						{
 							d->scrollY = 0 - (ctl->h / 8);
-						}
 
 						if (d->scrollY > d->maxScrollY + (ctl->h / 4))
-						{
 							d->scrollY = d->maxScrollY + (ctl->h / 8);
-						}
 
 						msg = aw_msg(0, 1, 0, 0);
 						ctl->ondraw(ctl);
@@ -663,14 +613,10 @@ byte acmenu_onfocus(void *x)
 	d->focused    = 1;
 
 	if ((d->focusedItem == -1) && (d->itemn > 0))
-	{
 		d->focusedItem = 0;
-	}
 
 	if ((d->focusedItem != -1) && (d->draweditemn > 0))
-	{
 		acmenu_redrawitem(ctl, d->focusedItem);
-	}
 
 	ctl->ondraw(ctl);
 	return 1;
@@ -694,14 +640,10 @@ ACONTROLP acmenu(AWINDOWP win, int x, int y, int w, int h, byte touchmsg)
 {
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 20)
-	{
 		w = agdp() * 20;
-	}
 
 	//-- Initializing Text Data
 	ACMENUDP d = (ACMENUDP)malloc(sizeof(ACMENUD));

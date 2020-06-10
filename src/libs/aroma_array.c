@@ -36,16 +36,12 @@ char* aarray_get(AARRAYP a, char* key)
 	int i;
 
 	if (!a || !key)
-	{
 		return NULL;
-	}
 
 	for (i = 0; i < a->length; i++)
 	{
 		if (strcmp(a->items[i].key, key) == 0)
-		{
 			return a->items[i].val;
-		}
 	}
 
 	return NULL;
@@ -57,9 +53,7 @@ byte aarray_set(AARRAYP a, char* key, char* val)
 	int i;
 
 	if (!a || !val || !key)
-	{
 		return 0;
-	}
 
 	for (i = 0; i < a->length; i++)
 	{
@@ -73,9 +67,7 @@ byte aarray_set(AARRAYP a, char* key, char* val)
 	if (found_id != -1)
 	{
 		if (a->items[found_id].val != NULL)
-		{
 			free(a->items[found_id].val);
-		}
 
 		a->items[found_id].val = malloc(strlen(val) + 1);
 		strcpy(a->items[found_id].val, val);
@@ -114,9 +106,7 @@ byte aarray_del(AARRAYP a, char* key)
 	int i;
 
 	if (!a || !key)
-	{
 		return 0;
-	}
 
 	for (i = 0; i < a->length; i++)
 	{
@@ -138,9 +128,7 @@ byte aarray_free(AARRAYP a)
 	int i;
 
 	if (!a)
-	{
 		return 0;
-	}
 
 	for (i = 0; i < a->length; i++)
 	{

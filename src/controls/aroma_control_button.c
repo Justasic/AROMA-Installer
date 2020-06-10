@@ -46,27 +46,22 @@ dword acbutton_oninput(void *x, int action, ATEV *atev)
 			vibrate(30);
 			d->pushed = 1;
 			msg       = aw_msg(0, 1, 0, 0);
-			ctl->ondraw(ctl);
-		}
-		break;
 
+			ctl->ondraw(ctl);
+			break;
+		}
 		case ATEV_MOUSEUP:
 		{
 			d->pushed = 0;
 
 			if (aw_touchoncontrol(ctl, atev->x, atev->y))
-			{
 				msg = aw_msg(d->touchmsg, 1, 0, 0);
-			}
 			else
-			{
 				msg = aw_msg(0, 1, 0, 0);
-			}
 
 			ctl->ondraw(ctl);
+			break;
 		}
-		break;
-
 		case ATEV_SELECT:
 		{
 			if (atev->d)
@@ -96,17 +91,11 @@ void acbutton_ondraw(void *x)
 	CANVAS *   pc  = &ctl->win->c;
 
 	if (d->pushed)
-	{
 		ag_draw(pc, &d->control_pushed, ctl->x, ctl->y);
-	}
 	else if (d->focused)
-	{
 		ag_draw(pc, &d->control_focused, ctl->x, ctl->y);
-	}
 	else
-	{
 		ag_draw(pc, &d->control, ctl->x, ctl->y);
-	}
 }
 
 void acbutton_ondestroy(void *x)
@@ -124,6 +113,7 @@ byte acbutton_onfocus(void *x)
 	ACONTROLP  ctl = (ACONTROLP)x;
 	ACBUTTONDP d   = (ACBUTTONDP)ctl->d;
 	d->focused     = 1;
+
 	ctl->ondraw(ctl);
 	return 1;
 }
@@ -140,14 +130,10 @@ ACONTROLP acbutton(AWINDOWP win, int x, int y, int w, int h, char *text, byte is
 {
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 16)
-	{
 		w = agdp() * 16;
-	}
 
 	//-- Initializing Text Metrics
 	int txtw = ag_txtwidth(text, isbig);

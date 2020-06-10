@@ -39,9 +39,7 @@ long aTick()
 	struct timespec now;
 
 	if (clock_gettime(CLOCK_MONOTONIC, &now))
-	{
 		return 0;
-	}
 
 	return ((long)(now.tv_sec * 1000.0 + now.tv_nsec / 1000000.0));
 }
@@ -63,19 +61,15 @@ byte alib_copy(char *src, char *dst)
 	iFd         = open(src, O_RDONLY);
 
 	if (iFd == -1)
-	{
 		goto done;
-	}
 
 	oFlags = O_CREAT | O_WRONLY | O_TRUNC;
 	fPerm  = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 	oFd    = open(dst, oFlags, fPerm);
 
 	if (oFd == -1)
-	{
 		ret = 3;
 		goto done;
-	}
 
 	while ((numRead = read(iFd, buf, 1024)) > 0)
 	{
@@ -96,14 +90,10 @@ byte alib_copy(char *src, char *dst)
 done:
 
 	if (iFd != -1)
-	{
 		close(iFd);
-	}
 
 	if (oFd != -1)
-	{
 		close(oFd);
-	}
 
 	return ret;
 }
@@ -123,13 +113,9 @@ int *ai_rtrimw(int *chr, int len)
 	for (i = len - 1; i >= 0; i--)
 	{
 		if ((res[i] == ' ') || (res[i] == '\n') || (res[i] == '\r') || (res[i] == '\t'))
-		{
 			res[i] = 0;
-		}
 		else
-		{
 			break;
-		}
 	}
 
 	return res;
@@ -143,13 +129,9 @@ char *ai_rtrim(char *chr)
 	for (i = strlen(res) - 1; i >= 0; i--)
 	{
 		if ((res[i] == ' ') || (res[i] == '\n') || (res[i] == '\r') || (res[i] == '\t'))
-		{
 			res[i] = 0;
-		}
 		else
-		{
 			break;
-		}
 	}
 
 	return res;
@@ -173,9 +155,7 @@ char *ai_trim(char *chr)
 		}
 
 		if (!nobreak)
-		{
 			break;
-		}
 
 		res++;
 	}
@@ -185,13 +165,9 @@ char *ai_trim(char *chr)
 	for (i = strlen(res) - 1; i >= 0; i--)
 	{
 		if ((res[i] == ' ') || (res[i] == '\n') || (res[i] == '\r') || (res[i] == '\t'))
-		{
 			res[i] = 0;
-		}
 		else
-		{
 			break;
-		}
 	}
 
 	return res;
@@ -215,13 +191,9 @@ byte ismounted(char *path)
 				c = fgetc(fp);
 
 				if (c == EOF)
-				{
 					goto done;
-				}
 				else if (isspace(c))
-				{
 					break;
-				}
 			} while (c != EOF);
 
 			char p[256];
@@ -233,13 +205,9 @@ byte ismounted(char *path)
 				c = fgetc(fp);
 
 				if (c == EOF)
-				{
 					goto done;
-				}
 				else if (isspace(c))
-				{
 					break;
-				}
 
 				p[pl++] = c;
 			} while (c != EOF);
@@ -257,13 +225,9 @@ byte ismounted(char *path)
 				c = fgetc(fp);
 
 				if (c == EOF)
-				{
 					goto done;
-				}
 				else if (c == '\n')
-				{
 					break;
-				}
 			} while (c != EOF);
 		} while (c != EOF);
 
@@ -297,9 +261,7 @@ int remove_directory(const char *path)
 			size_t len;
 
 			if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, ".."))
-			{
 				continue;
-			}
 
 			len = path_len + strlen(p->d_name) + 2;
 			buf = malloc(len);
@@ -312,13 +274,9 @@ int remove_directory(const char *path)
 				if (!stat(buf, &statbuf))
 				{
 					if (S_ISDIR(statbuf.st_mode))
-					{
 						r2 = remove_directory(buf);
-					}
 					else
-					{
 						r2 = unlink(buf);
-					}
 				}
 
 				free(buf);
@@ -331,9 +289,7 @@ int remove_directory(const char *path)
 	}
 
 	if (!r)
-	{
 		r = rmdir(path);
-	}
 
 	return r;
 }
@@ -344,9 +300,7 @@ int alib_diskusage(const char *path)
 	struct statfs fiData;
 
 	if ((statfs(path, &fiData)) < 0)
-	{
 		return -1;
-	}
 	else
 	{
 		int perc = round((((float)fiData.f_bfree) / ((float)fiData.f_blocks)) * 100);
@@ -359,9 +313,7 @@ byte alib_disksize(const char *path, unsigned long *ret, int division)
 	struct statfs fiData;
 
 	if ((statfs(path, &fiData)) < 0)
-	{
 		return 0;
-	}
 	else
 	{
 		if (ret != NULL)
@@ -370,13 +322,9 @@ byte alib_disksize(const char *path, unsigned long *ret, int division)
 			double sizek = block * fiData.f_bsize;
 
 			if (block == (sizek / fiData.f_bsize))
-			{
 				ret[0] = round(sizek);
-			}
 			else
-			{
 				return 0;
-			}
 		}
 
 		return 1;
@@ -388,9 +336,7 @@ byte alib_diskfree(const char *path, unsigned long *ret, int division)
 	struct statfs fiData;
 
 	if ((statfs(path, &fiData)) < 0)
-	{
 		return 0;
-	}
 	else
 	{
 		if (ret != NULL)
@@ -399,13 +345,9 @@ byte alib_diskfree(const char *path, unsigned long *ret, int division)
 			double sizek = block * fiData.f_bsize;
 
 			if (block == (sizek / fiData.f_bsize))
-			{
 				ret[0] = round(sizek);
-			}
 			else
-			{
 				return 0;
-			}
 		}
 
 		return 1;
@@ -454,9 +396,7 @@ void akinetic_downhandler(AKINETIC *p, int mouseY)
 int akinetic_movehandler(AKINETIC *p, int mouseY)
 {
 	if (!p->isdown)
-	{
 		return 0;
-	}
 
 	int  currPoint     = mouseY;
 	long currTime      = alib_tick();
@@ -485,9 +425,7 @@ int akinetic_movehandler(AKINETIC *p, int mouseY)
 byte akinetic_uphandler(AKINETIC *p, int mouseY)
 {
 	if (!p->isdown)
-	{
 		return 0;
-	}
 
 	p->isdown       = 0;
 	int  currPoint  = (mouseY == 0) ? p->previousPoints[p->history_n - 1] : mouseY;
@@ -496,14 +434,10 @@ byte akinetic_uphandler(AKINETIC *p, int mouseY)
 	long firstTime  = p->previousTimes[0];
 
 	if (currTime - firstTime < 1)
-	{
 		firstTime--;
-	}
 
 	if (currTime - firstTime > 25)
-	{
 		return 0;
-	}
 
 	int  diff   = firstPoint - currPoint;
 	long time   = (currTime - firstTime);
@@ -516,9 +450,7 @@ int akinetic_fling(AKINETIC *p)
 	p->velocity = p->velocity * AKINETIC_DAMPERING;
 
 	if (abs(p->velocity) < 0.1)
-	{
 		return 0;
-	}
 
 	return ceil(p->velocity);
 }
@@ -528,9 +460,7 @@ int akinetic_fling_dampered(AKINETIC *p, float dampersz)
 	p->velocity = p->velocity * dampersz;
 
 	if (abs(p->velocity) < 0.1)
-	{
 		return 0;
-	}
 
 	return ceil(p->velocity);
 }

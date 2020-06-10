@@ -51,21 +51,15 @@ void a_check_reboot()
 		fprintf(apipe(), "ui_print\n");
 
 		if (strcmp(reboot_type, "") == 0)
-		{
 			fprintf(apipe(), "ui_print Rebooting...\n");
-		}
 		else
-		{
 			fprintf(apipe(), "ui_print Rebooting (%s)...\n", reboot_type);
-		}
 
 		fprintf(apipe(), "ui_print\n");
 		usleep(2000000);
 
 		if (strcmp(reboot_type, "") == 0)
-		{
 			reboot(RB_AUTOBOOT);
-		}
 		else
 		{
 			// Other
@@ -217,9 +211,7 @@ int main(int argc, char** argv)
 		a_release_all();
 	}
 	else
-	{
 		LOGE("Cannot Open Archive\n");
-	}
 
 	//-- Unmute Parent
 	if (parent_pid)

@@ -188,18 +188,14 @@ byte INDR_init(AINPUTP me)
 		{
 			/* Continue if filename not contain "event" */
 			if (strncmp(de->d_name, "event", 5))
-			{
 				continue;
-			}
 
 			/* Open File Handler */
 			fd = openat(dirfd(dir), de->d_name, O_RDONLY);
 
 			/* Continue if openat failed */
 			if (fd < 0)
-			{
 				continue;
-			}
 
 			/* Cleanup Device Data */
 			memset(&mi->dev[mi->n], 0, sizeof(INDR_DEVICE));
@@ -232,9 +228,7 @@ byte INDR_init(AINPUTP me)
 
 			/* Break when maximum device */
 			if (mi->n == INDR_MAXDEV)
-			{
 				break;
-			}
 		}
 
 		/* Close Dir */
@@ -272,9 +266,7 @@ void INDR_release(AINPUTP me)
 {
 	/* Is Input Instance Initialized ? */
 	if (me == NULL)
-	{
 		return;
-	}
 
 	/* Get Internal Data */
 	INDR_INTERNALP mi = (INDR_INTERNALP)me->internal;
@@ -307,9 +299,7 @@ static char* INDR_strtok_r(char* str, const char* delim, char** save_str)
 	if (!str)
 	{
 		if (!*save_str)
-		{
 			return NULL;
-		}
 
 		str = (*save_str) + 1;
 	}
@@ -317,9 +307,7 @@ static char* INDR_strtok_r(char* str, const char* delim, char** save_str)
 	*save_str = strpbrk(str, delim);
 
 	if (*save_str)
-	{
 		**save_str = '\0';
-	}
 
 	return str;
 }
@@ -336,9 +324,7 @@ static byte INDR_nonzero(const bytep array_s, dword startIndex, dword endIndex)
 	while (array != end)
 	{
 		if (*(array++) != 0)
-		{
 			return 1;
-		}
 	}
 
 	return 0;
@@ -365,9 +351,7 @@ byte INDR_getdevclass(int fd)
 	    || INDR_nonzero(keyBitmask, INDR_SIZEOF_BIT_ARRAY(BTN_JOYSTICK), INDR_SIZEOF_BIT_ARRAY(BTN_DIGI));
 
 	if (haveKeyboardKeys)
-	{
 		ret |= INDR_DEVCLASS_KEYBOARD;
-	}
 
 	/* Check Touch Screen */
 	if (INDR_TEST_BIT(ABS_MT_POSITION_X, absBitmask) && INDR_TEST_BIT(ABS_MT_POSITION_Y, absBitmask))
@@ -409,18 +393,14 @@ byte INDR_init_device(INDR_INTERNALP mi, int fd, INDR_DEVICEP dev)
 
 	/* Blacklisted Devices */
 	if (INDR_blacklist(dev->name))
-	{
 		return 0;
-	}
 
 	/* Get device class */
 	dev->devclass = INDR_getdevclass(fd);
 
 	/* If Class is none, Ignore it */
 	if (!dev->devclass)
-	{
 		return 0;
-	}
 
 	/* Reset All Values */
 	memset(&dev->p, 0, sizeof(INDR_POS));
@@ -470,17 +450,13 @@ byte INDR_init_device(INDR_INTERNALP mi, int fd, INDR_DEVICEP dev)
 				for (ts = vks, dev->vkn = 1; *ts; ++ts)
 				{
 					if (*ts == ':')
-					{
 						dev->vkn++;
-					}
 				}
 
 				dev->vkn /= 6;
 
 				if (dev->vkn <= 0)
-				{
 					dev->vkn = 0;
-				}
 			}
 		}
 
@@ -496,14 +472,10 @@ byte INDR_init_device(INDR_INTERNALP mi, int fd, INDR_DEVICEP dev)
 				int   j;
 
 				for (j = 0; j < 6; j++)
-				{
 					token[j] = INDR_strtok_r((i || j) ? NULL : vks, ":", &ts);
-				}
 
 				if (strcmp(token[0], "0x01") != 0)
-				{
 					continue;
-				}
 
 				/* Save It */
 				dev->vks[i].scan = strtol(token[1], NULL, 0);

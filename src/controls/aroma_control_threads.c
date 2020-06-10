@@ -37,9 +37,7 @@ static void *ac_scrolltothread(void *cookie)
 	ASCROLLTODATAP dt = (ASCROLLTODATAP)cookie;
 
 	if (dt->ctl->win->isActived)
-	{
 		dt->ctl->win->threadnum++;
-	}
 	else
 	{
 		free(dt);
@@ -53,36 +51,26 @@ static void *ac_scrolltothread(void *cookie)
 		int diff = floor(((float)(dt->scrollY[0] - dt->requestY)) * 0.5);
 
 		if (abs(diff) < 1)
-		{
 			dt->scrollY[0] = dt->requestY;
-		}
 		else
-		{
 			dt->scrollY[0] -= diff;
-		}
 
 		//-- REDRAW
 		dt->ctl->ondraw(dt->ctl);
 		aw_draw(dt->ctl->win);
 
 		if (dt->requestHandler[0] != dt->requestValue)
-		{
 			break;
-		}
 
 		if (!dt->ctl->win->isActived)
-		{
 			break;
-		}
 
 		if (ontouch())
 		{
 			ACONTROLP nctl = (ACONTROLP)dt->ctl->win->controls[dt->ctl->win->touchIndex];
 
 			if (nctl == dt->ctl)
-			{
 				break;
-			}
 		}
 	}
 
@@ -102,14 +90,10 @@ void ac_regscrollto(ACONTROLP ctl, int *scrollY, int maxScrollY, int requestY, i
 	fdt->requestValue   = requestValue;
 
 	if (fdt->requestY < 0)
-	{
 		fdt->requestY = 0;
-	}
 
 	if (fdt->requestY > maxScrollY)
-	{
 		fdt->requestY = maxScrollY;
-	}
 
 	if (fdt->requestY != fdt->scrollY[0])
 	{
@@ -133,9 +117,7 @@ static void *ac_pushwaitthread(void *cookie)
 	APUSHWAITDATAP dt = (APUSHWAITDATAP)cookie;
 
 	if (dt->ctl->win->isActived)
-	{
 		dt->ctl->win->threadnum++;
-	}
 	else
 	{
 		free(dt);
@@ -199,9 +181,7 @@ static void *ac_bouncethread(void *cookie)
 	ABOUNCEDATAP dt = (ABOUNCEDATAP)cookie;
 
 	if (dt->ctl->win->isActived)
-	{
 		dt->ctl->win->threadnum++;
-	}
 	else
 	{
 		free(dt);
@@ -212,9 +192,7 @@ static void *ac_bouncethread(void *cookie)
 	byte bouncetype = 0;
 
 	if (dt->scrollY[0] < 0)
-	{
 		bouncesz = abs(dt->scrollY[0]);
-	}
 	else if (dt->scrollY[0] > dt->maxScrollY)
 	{
 		bouncetype = 1;
@@ -224,49 +202,35 @@ static void *ac_bouncethread(void *cookie)
 	while (bouncesz > 0)
 	{
 		if (dt->ctl->forceNS)
-		{
 			break;
-		}
 
 		bouncesz = floor(bouncesz * 0.3);
 
 		if (bouncetype)
-		{
 			dt->scrollY[0] = dt->maxScrollY + bouncesz;
-		}
 		else
-		{
 			dt->scrollY[0] = 0 - bouncesz;
-		}
 
 		//-- REDRAW
 		dt->ctl->ondraw(dt->ctl);
 		aw_draw(dt->ctl->win);
 
 		if (!dt->ctl->win->isActived)
-		{
 			break;
-		}
 
 		if (ontouch())
 		{
 			ACONTROLP nctl = (ACONTROLP)dt->ctl->win->controls[dt->ctl->win->touchIndex];
 
 			if (nctl == dt->ctl)
-			{
 				break;
-			}
 		}
 
 		if (dt->scrollY[0] == 0)
-		{
 			break;
-		}
 
 		if (dt->scrollY[0] == dt->maxScrollY)
-		{
 			break;
-		}
 	}
 
 	dt->ctl->win->threadnum--;
@@ -299,9 +263,7 @@ static void *ac_flingthread(void *cookie)
 	AFLINGDATAP dt = (AFLINGDATAP)cookie;
 
 	if (dt->ctl->win->isActived)
-	{
 		dt->ctl->win->threadnum++;
-	}
 	else
 	{
 		free(dt);
@@ -314,9 +276,7 @@ static void *ac_flingthread(void *cookie)
 	while ((mz != 0) && (dt->ctl->win->isActived))
 	{
 		if (dt->ctl->forceNS)
-		{
 			break;
-		}
 
 		int zz = ceil(dt->akin->velocity);
 		/*vz+=dt->akin->velocity-zz;
@@ -337,43 +297,31 @@ static void *ac_flingthread(void *cookie)
 		//}
 
 		if (!dt->ctl->win->isActived)
-		{
 			break;
-		}
 
 		if ((dt->scrollY[0] < 0 - (dt->ctl->h / 4)) || (dt->scrollY[0] > dt->maxScrollY + (dt->ctl->h / 4)))
-		{
 			break;
-		}
 
 		if (ontouch())
 		{
 			ACONTROLP nctl = (ACONTROLP)dt->ctl->win->controls[dt->ctl->win->touchIndex];
 
 			if (nctl == dt->ctl)
-			{
 				break;
-			}
 		}
 
 		// usleep(4000);
 
 		if ((dt->scrollY[0] < 0) || (dt->scrollY[0] > dt->maxScrollY))
-		{
 			mz = akinetic_fling_dampered(dt->akin, 0.4);
-		}
 		else
-		{
 			mz = akinetic_fling(dt->akin);
-		}
 	}
 
 	if (dt->ctl->win->isActived)
 	{
 		if ((dt->scrollY[0] < 0) || (dt->scrollY[0] > dt->maxScrollY))
-		{
 			ac_regbounce(dt->ctl, dt->scrollY, dt->maxScrollY);
-		}
 	}
 
 	dt->ctl->win->threadnum--;

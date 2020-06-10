@@ -45,36 +45,26 @@ dword actext_oninput(void *x, int action, ATEV *atev)
 	ACTEXTDP  d   = (ACTEXTDP)ctl->d;
 
 	if (d->maxScrollY == 0)
-	{
 		return 0;
-	}
 
 	dword msg = 0;
 
 	switch (action)
 	{
 		case ATEV_MOUSEDN:
-		{
 			akinetic_downhandler(&d->akin, atev->y);
-		}
-		break;
-
+			break;
 		case ATEV_MOUSEUP:
 		{
 			if (d->maxScrollY > 0)
 			{
 				if (akinetic_uphandler(&d->akin, atev->y))
-				{
 					ac_regfling(ctl, &d->akin, &d->scrollY, d->maxScrollY);
-				}
 				else if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_MOUSEMV:
 		{
 			if (atev->y != 0)
@@ -96,28 +86,21 @@ dword actext_oninput(void *x, int action, ATEV *atev)
 							d->scrollY += floor(mv * dumpsz);
 						}
 						else
-						{
 							d->scrollY += mv;
-						}
 
 						if (d->scrollY < 0 - (ctl->h / 4))
-						{
 							d->scrollY = 0 - (ctl->h / 8);
-						}
 
 						if (d->scrollY > d->maxScrollY + (ctl->h / 4))
-						{
 							d->scrollY = d->maxScrollY + (ctl->h / 8);
-						}
 
 						msg = aw_msg(0, 1, 0, 0);
 						ctl->ondraw(ctl);
 					}
 				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_DOWN:
 		{
 			if (d->scrollY < d->maxScrollY)
@@ -126,16 +109,13 @@ dword actext_oninput(void *x, int action, ATEV *atev)
 				int reqY = d->scrollY + ceil(ctl->h / 8);
 
 				if (reqY > d->maxScrollY)
-				{
 					reqY = d->maxScrollY;
-				}
 
 				d->targetY = reqY;
 				ac_regscrollto(ctl, &d->scrollY, d->maxScrollY, reqY, &d->targetY, d->targetY);
 			}
+			break;
 		}
-		break;
-
 		case ATEV_UP:
 		{
 			if (d->scrollY > 0)
@@ -144,15 +124,13 @@ dword actext_oninput(void *x, int action, ATEV *atev)
 				int reqY = d->scrollY - ceil(ctl->h / 8);
 
 				if (reqY < 0)
-				{
 					reqY = 0;
-				}
 
 				d->targetY = reqY;
 				ac_regscrollto(ctl, &d->scrollY, d->maxScrollY, reqY, &d->targetY, d->targetY);
 			}
+			break;
 		}
-		break;
 	}
 
 	return msg;
@@ -188,30 +166,22 @@ void actext_ondraw(void *x)
 		byte isSB = (d->scrollY <= d->maxScrollY - agdp3) ? 1 : 0;
 
 		if (d->forceGlowTop)
-		{
 			isST = 1;
-		}
 
 		int add_t_y = 1;
 
 		if (d->focused)
-		{
 			add_t_y = agdp();
-		}
 
 		for (i = 0; i < agdpX; i++)
 		{
 			byte alph = 255 - round((((float)(i + 1)) / ((float)agdpX)) * 230);
 
 			if (isST)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ctl->y + i + add_t_y, ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 
 			if (isSB)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, (ctl->y + ctl->h) - (i + 1) - add_t_y, ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 		}
 
 		if (d->maxScrollY > 0)
@@ -228,9 +198,7 @@ void actext_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
@@ -240,16 +208,12 @@ void actext_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY - d->maxScrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
 			else
-			{
 				ag_rect(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar);
-			}
 		}
 	}
 }
@@ -358,27 +322,19 @@ void actext_rebuild(ACONTROLP ctl, int x, int y, int w, int h, char *text, byte 
 	//-- Rebuild
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 16)
-	{
 		w = agdp() * 16;
-	}
 
 	//-- Initializing Client Area
 	int cw = w - (agdp() * (minpadding * 2));
 	int ch = 0;
 
 	if (text != NULL)
-	{
 		ch = ag_txtheight(cw, text, isbig) + (agdp() * (minpadding * 2));
-	}
 	else
-	{
 		ch = h - (agdp() * 2);
-	}
 
 	//-- Initializing Canvas
 	ag_canvas(&d->control, w, h);
@@ -407,9 +363,7 @@ void actext_rebuild(ACONTROLP ctl, int x, int y, int w, int h, char *text, byte 
 	ag_rect(&d->client, 0, 0, cw, ch, acfg()->textbg);
 
 	if (text != NULL)
-	{
 		ag_text(&d->client, cw, 0, agdp() * minpadding, text, acfg()->textfg, isbig);
-	}
 
 	d->isbigtxt     = isbig;
 	d->targetY      = 0;
@@ -420,9 +374,7 @@ void actext_rebuild(ACONTROLP ctl, int x, int y, int w, int h, char *text, byte 
 	d->isFixedText  = 0;
 
 	if (text != NULL)
-	{
 		d->maxScrollY = ch - (h - (agdp() * minpadding));
-	}
 	else
 	{
 		d->maxScrollY  = 0;
@@ -430,9 +382,7 @@ void actext_rebuild(ACONTROLP ctl, int x, int y, int w, int h, char *text, byte 
 	}
 
 	if (d->maxScrollY < 0)
-	{
 		d->maxScrollY = 0;
-	}
 
 	ctl->x       = x;
 	ctl->y       = y;
@@ -441,9 +391,7 @@ void actext_rebuild(ACONTROLP ctl, int x, int y, int w, int h, char *text, byte 
 	ctl->forceNS = 0;
 
 	if (toBottom)
-	{
 		d->scrollY = d->maxScrollY;
-	}
 
 	ctl->ondraw(ctl);
 	aw_draw(ctl->win);
@@ -453,14 +401,10 @@ ACONTROLP actext(AWINDOWP win, int x, int y, int w, int h, char *text, byte isbi
 {
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 16)
-	{
 		w = agdp() * 16;
-	}
 
 	//-- Initializing Client Area
 	int minpadding = 4; // max(acfg()->roundsz,4);
@@ -468,13 +412,9 @@ ACONTROLP actext(AWINDOWP win, int x, int y, int w, int h, char *text, byte isbi
 	int ch         = 0;
 
 	if (text != NULL)
-	{
 		ch = ag_txtheight(cw, text, isbig) + (agdp() * (minpadding * 2));
-	}
 	else
-	{
 		ch = h - (agdp() * 2);
-	}
 
 	//-- Initializing Text Data
 	ACTEXTDP d = (ACTEXTDP)malloc(sizeof(ACTEXTD));
@@ -495,9 +435,7 @@ ACONTROLP actext(AWINDOWP win, int x, int y, int w, int h, char *text, byte isbi
 	ag_rect(&d->client, 0, 0, cw, ch, acfg()->textbg);
 
 	if (text != NULL)
-	{
 		ag_text(&d->client, cw, 0, agdp() * minpadding, text, acfg()->textfg, isbig);
-	}
 
 	d->isbigtxt     = isbig;
 	d->targetY      = 0;
@@ -508,9 +446,7 @@ ACONTROLP actext(AWINDOWP win, int x, int y, int w, int h, char *text, byte isbi
 	d->isFixedText  = 0;
 
 	if (text != NULL)
-	{
 		d->maxScrollY = ch - (h - (agdp() * minpadding));
-	}
 	else
 	{
 		d->maxScrollY  = 0;
@@ -518,9 +454,7 @@ ACONTROLP actext(AWINDOWP win, int x, int y, int w, int h, char *text, byte isbi
 	}
 
 	if (d->maxScrollY < 0)
-	{
 		d->maxScrollY = 0;
-	}
 
 	ACONTROLP ctl  = malloc(sizeof(ACONTROL));
 	ctl->ondestroy = &actext_ondestroy;

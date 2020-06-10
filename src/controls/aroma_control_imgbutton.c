@@ -47,26 +47,20 @@ dword imgbtn_oninput(void *x, int action, ATEV *atev)
 			d->pushed = 1;
 			msg       = aw_msg(0, 1, 0, 0);
 			ctl->ondraw(ctl);
+			break;
 		}
-		break;
-
 		case ATEV_MOUSEUP:
 		{
 			d->pushed = 0;
 
 			if (aw_touchoncontrol(ctl, atev->x, atev->y))
-			{
 				msg = aw_msg(d->touchmsg, 1, 0, 0);
-			}
 			else
-			{
 				msg = aw_msg(0, 1, 0, 0);
-			}
 
 			ctl->ondraw(ctl);
+			break;
 		}
-		break;
-
 		case ATEV_SELECT:
 		{
 			if (atev->d)
@@ -82,8 +76,8 @@ dword imgbtn_oninput(void *x, int action, ATEV *atev)
 				msg       = aw_msg(d->touchmsg, 1, 0, 0);
 				ctl->ondraw(ctl);
 			}
+			break;
 		}
-		break;
 	}
 
 	return msg;
@@ -96,17 +90,11 @@ void imgbtn_ondraw(void *x)
 	CANVAS *  pc  = &ctl->win->c;
 
 	if (d->pushed)
-	{
 		ag_draw(pc, &d->control_pushed, ctl->x, ctl->y);
-	}
 	else if (d->focused)
-	{
 		ag_draw(pc, &d->control_focused, ctl->x, ctl->y);
-	}
 	else
-	{
 		ag_draw(pc, &d->control, ctl->x, ctl->y);
-	}
 }
 
 void imgbtn_ondestroy(void *x)
@@ -153,14 +141,10 @@ ACONTROLP imgbtn_reinit(AWINDOWP win, ACONTROLP ctl, int x, int y, int w, int h,
 	char vtext[64] = {0};
 
 	if (w < agdp() * 20)
-	{
 		w = agdp() * 20;
-	}
 
 	if (h < agdp() * 20)
-	{
 		h = agdp() * 20;
-	}
 
 	if (text != NULL)
 	{
@@ -173,9 +157,7 @@ ACONTROLP imgbtn_reinit(AWINDOWP win, ACONTROLP ctl, int x, int y, int w, int h,
 			txth = ag_fontheight(0);
 
 			if (w < ((agdp() * 22) + txtw))
-			{
 				w = ((agdp() * 22) + txtw);
-			}
 
 			txtx = round(w / 2) - round(((agdp() * 20) + txtw) / 2);
 			txty = round(h / 2) - round(txth / 2);
@@ -186,9 +168,7 @@ ACONTROLP imgbtn_reinit(AWINDOWP win, ACONTROLP ctl, int x, int y, int w, int h,
 			txth = ag_fontheight(0);
 
 			if (h < ((agdp() * 20) + txth))
-			{
 				h = ((agdp() * 20) + txth);
-			}
 
 			txtx = round(w / 2) - round(txtw / 2);
 			txty = (agdp() * 16);
@@ -228,9 +208,7 @@ ACONTROLP imgbtn_reinit(AWINDOWP win, ACONTROLP ctl, int x, int y, int w, int h,
 	}
 
 	if (isflat == 3)
-	{
 		isflat = 0;
-	}
 
 	//-- Initializing Button Data
 	IMGBTNDP d = NULL;

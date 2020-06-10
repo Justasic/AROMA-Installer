@@ -30,11 +30,11 @@ AARRAYP alang = NULL;
 //*
 void alang_release()
 {
-	if (alang != NULL)
-	{
-		aarray_free(alang);
-		alang = NULL;
-	}
+	if (alang == NULL)
+		return;
+
+	aarray_free(alang);
+	alang = NULL;
 }
 
 //*
@@ -43,9 +43,7 @@ void alang_release()
 char* alang_get(char* key)
 {
 	if (alang == NULL)
-	{
 		return NULL;
-	}
 
 	return aarray_get(alang, key);
 }
@@ -155,9 +153,7 @@ byte alang_load(char* z)
 	char* buf = aui_readfromzip(z);
 
 	if (buf == NULL)
-	{
 		return 0;
-	}
 
 	char* vuf = buf;
 
@@ -165,9 +161,7 @@ byte alang_load(char* z)
 	{
 		//-- Check UTF-8 File Header
 		if ((vuf[0] == 0xEF) && (vuf[1] == 0xBB) && (vuf[2] == 0xBF))
-		{
 			vuf += 3;
-		}
 	}
 
 	byte  state = 0;
@@ -188,17 +182,13 @@ byte alang_load(char* z)
 				state = 2;
 			}
 			else if (c == '#')
-			{
 				state = 1;
-			}
 		}
 		else if (state == 1)
 		{
 			//-- Comment
 			if (c == '\n')
-			{
 				state = 0;
-			}
 		}
 		else if (state == 2)
 		{
@@ -207,13 +197,9 @@ byte alang_load(char* z)
 				*vuf = 0;
 
 				if (c == '=')
-				{
 					state = 3;
-				}
 				else if (c == '\n')
-				{
 					state = 0;
-				}
 			}
 		}
 		else if (state == 3)
@@ -225,18 +211,14 @@ byte alang_load(char* z)
 				pc    = c;
 			}
 			else if (c == '\n')
-			{
 				state = 0;
-			}
 		}
 		else if (state == 4)
 		{
 			if (((c == '\n') && (pc != '\\')) || (*(vuf + 1) == 0))
 			{
 				if ((c == '\n') && (pc != '\\'))
-				{
 					*vuf = 0;
-				}
 
 				//-- Cleanup backslashes
 				int i;
@@ -246,9 +228,7 @@ byte alang_load(char* z)
 				for (i = 0; i < l; i++)
 				{
 					if ((val[i] == '\\') && (val[i + 1] == '\n'))
-					{
 						continue;
-					}
 
 					val[j++] = val[i];
 				}

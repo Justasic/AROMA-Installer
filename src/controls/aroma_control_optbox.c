@@ -89,9 +89,7 @@ void acopt_ondestroy(void *x)
 		int i;
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			free(d->items[i]);
-		}
 
 		free(d->items);
 		ag_ccanvas(&d->client);
@@ -105,14 +103,10 @@ void acopt_redrawitem(ACONTROLP ctl, int index)
 	ACOPTDP d = (ACOPTDP)ctl->d;
 
 	if (d->acheck_signature != 136)
-	{
 		return; //-- Not Valid Signature
-	}
 
 	if ((index >= d->itemn) || (index < 0))
-	{
 		return; //-- Not Valid Index
-	}
 
 	ACOPTIP p = d->items[index];
 	CANVAS *c = &d->client;
@@ -189,32 +183,20 @@ void acopt_redrawitem(ACONTROLP ctl, int index)
 		if (p->id == d->selectedIndexs[p->group])
 		{
 			if (index == d->touchedItem)
-			{
 				drawed = atheme_draw("img.radio.on.push", c, optbox_x - minpad, optbox_y - minpad, optbox_s + addpad, optbox_s + addpad);
-			}
 			else if ((index == d->focusedItem) && (d->focused))
-			{
 				drawed = atheme_draw("img.radio.on.focus", c, optbox_x - minpad, optbox_y - minpad, optbox_s + addpad, optbox_s + addpad);
-			}
 			else
-			{
 				drawed = atheme_draw("img.radio.on", c, optbox_x - minpad, optbox_y - minpad, optbox_s + addpad, optbox_s + addpad);
-			}
 		}
 		else
 		{
 			if (index == d->touchedItem)
-			{
 				drawed = atheme_draw("img.radio.push", c, optbox_x - minpad, optbox_y - minpad, optbox_s + addpad, optbox_s + addpad);
-			}
 			else if ((index == d->focusedItem) && (d->focused))
-			{
 				drawed = atheme_draw("img.radio.focus", c, optbox_x - minpad, optbox_y - minpad, optbox_s + addpad, optbox_s + addpad);
-			}
 			else
-			{
 				drawed = atheme_draw("img.radio", c, optbox_x - minpad, optbox_y - minpad, optbox_s + addpad, optbox_s + addpad);
-			}
 		}
 
 		if (!drawed)
@@ -237,9 +219,7 @@ void acopt_redraw(ACONTROLP ctl)
 	ACOPTDP d = (ACOPTDP)ctl->d;
 
 	if (d->acheck_signature != 136)
-	{
 		return; //-- Not Valid Signature
-	}
 
 	if ((d->itemn > 0) && (d->draweditemn < d->itemn))
 	{
@@ -251,17 +231,13 @@ void acopt_redraw(ACONTROLP ctl)
 		d->maxScrollY = d->nextY - (ctl->h - (agdp() * max(acfg()->roundsz, 4)));
 
 		if (d->maxScrollY < 0)
-		{
 			d->maxScrollY = 0;
-		}
 
 		//-- Draw Items
 		int i;
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			acopt_redrawitem(ctl, i);
-		}
 
 		d->draweditemn = d->itemn;
 	}
@@ -270,16 +246,12 @@ void acopt_redraw(ACONTROLP ctl)
 int acopt_getselectedindex(ACONTROLP ctl, int group)
 {
 	if ((group < 0) || (group >= ACOPT_MAX_GROUP))
-	{
 		return -1;
-	}
 
 	ACOPTDP d = (ACOPTDP)ctl->d;
 
 	if (d->acheck_signature != 136)
-	{
 		return -1; //-- Not Valid Signature
-	}
 
 	return d->selectedIndexs[group];
 }
@@ -289,9 +261,7 @@ int acopt_getgroupid(ACONTROLP ctl, int index)
 	ACOPTDP d = (ACOPTDP)ctl->d;
 
 	if (d->acheck_signature != 136)
-	{
 		return 0; //-- Not Valid Signature
-	}
 
 	return d->items[index]->groupid;
 }
@@ -302,9 +272,7 @@ byte acopt_add(ACONTROLP ctl, char *title, char *desc, byte selected)
 	ACOPTDP d = (ACOPTDP)ctl->d;
 
 	if (d->acheck_signature != 136)
-	{
 		return 0; //-- Not Valid Signature
-	}
 
 	//-- Allocating Memory For Item Data
 	ACOPTIP newip = (ACOPTIP)malloc(sizeof(ACOPTI));
@@ -317,9 +285,7 @@ byte acopt_add(ACONTROLP ctl, char *title, char *desc, byte selected)
 	newip->h  = (agdp() * 10) + newip->dh + newip->th;
 
 	if (newip->h < (agdp() * 22))
-	{
 		newip->h = (agdp() * 22);
-	}
 
 	newip->id      = d->itemn;
 	newip->group   = d->groupCounts;
@@ -329,9 +295,7 @@ byte acopt_add(ACONTROLP ctl, char *title, char *desc, byte selected)
 	d->nextY += newip->h;
 
 	if (selected)
-	{
 		d->selectedIndexs[newip->group] = newip->id;
-	}
 
 	if (d->itemn > 0)
 	{
@@ -340,9 +304,7 @@ byte acopt_add(ACONTROLP ctl, char *title, char *desc, byte selected)
 		d->items         = malloc(sizeof(ACOPTIP) * (d->itemn + 1));
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			d->items[i] = tmpitms[i];
-		}
 
 		d->items[d->itemn] = newip;
 		free(tmpitms);
@@ -363,14 +325,10 @@ byte acopt_addgroup(ACONTROLP ctl, char *title, char *desc)
 	ACOPTDP d = (ACOPTDP)ctl->d;
 
 	if (d->acheck_signature != 136)
-	{
 		return 0; //-- Not Valid Signature
-	}
 
 	if (d->groupCounts + 1 >= ACOPT_MAX_GROUP)
-	{
 		return 0;
-	}
 
 	//-- Allocating Memory For Item Data
 	ACOPTIP newip = (ACOPTIP)malloc(sizeof(ACOPTI));
@@ -396,9 +354,7 @@ byte acopt_addgroup(ACONTROLP ctl, char *title, char *desc)
 		d->items         = malloc(sizeof(ACOPTIP) * (d->itemn + 1));
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			d->items[i] = tmpitms[i];
-		}
 
 		d->items[d->itemn] = newip;
 		free(tmpitms);
@@ -454,23 +410,17 @@ void acopt_ondraw(void *x)
 		int  add_t_y = 1;
 
 		if (d->focused)
-		{
 			add_t_y = agdp();
-		}
 
 		for (i = 0; i < agdpX; i++)
 		{
 			byte alph = 255 - round((((float)(i + 1)) / ((float)agdpX)) * 230);
 
 			if (isST)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ctl->y + i + add_t_y, ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 
 			if (isSB)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ((ctl->y + ctl->h) - (add_t_y)) - (i + 1), ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 		}
 
 		if (d->maxScrollY > 0)
@@ -487,9 +437,7 @@ void acopt_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
@@ -499,16 +447,12 @@ void acopt_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY - d->maxScrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
 			else
-			{
 				ag_rect(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar);
-			}
 		}
 	}
 }
@@ -574,9 +518,7 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 						d->selectedIndexs[grp] = i;
 
 						if ((prevfocus != -1) && (prevfocus != i))
-						{
 							acopt_redrawitem(ctl, prevfocus);
-						}
 
 						acopt_redrawitem(ctl, i);
 						ctl->ondraw(ctl);
@@ -587,20 +529,14 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 				}
 
 				if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
 			else if (d->maxScrollY > 0)
 			{
 				if (akinetic_uphandler(&d->akin, atev->y))
-				{
 					ac_regfling(ctl, &d->akin, &d->scrollY, d->maxScrollY);
-				}
 				else if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
 
 			if (d->touchedItem != -1)
@@ -612,9 +548,8 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 				ctl->ondraw(ctl);
 				msg = aw_msg(0, 1, 0, 0);
 			}
+			break;
 		}
-		break;
-
 		case ATEV_MOUSEMV:
 		{
 			byte allowscroll = 1;
@@ -678,9 +613,8 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 					}
 				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_SELECT:
 		{
 			if ((d->focusedItem > -1) && (d->draweditemn > 0))
@@ -725,9 +659,8 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 					msg = aw_msg(0, 1, 0, 0);
 				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_DOWN:
 		{
 			if ((d->focusedItem < d->itemn - 1) && (d->draweditemn > 0))
@@ -753,9 +686,8 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 				int reqY = d->items[d->focusedItem]->y - round((ctl->h / 2) - (d->items[d->focusedItem]->h / 2));
 				ac_regscrollto(ctl, &d->scrollY, d->maxScrollY, reqY, &d->focusedItem, d->focusedItem);
 			}
+			break;
 		}
-		break;
-
 		case ATEV_UP:
 		{
 			if ((d->focusedItem > 0) && (d->draweditemn > 0))
@@ -781,8 +713,8 @@ dword acopt_oninput(void *x, int action, ATEV *atev)
 				int reqY = d->items[d->focusedItem]->y - round((ctl->h / 2) - (d->items[d->focusedItem]->h / 2));
 				ac_regscrollto(ctl, &d->scrollY, d->maxScrollY, reqY, &d->focusedItem, d->focusedItem);
 			}
+			break;
 		}
-		break;
 	}
 
 	return msg;
@@ -795,14 +727,10 @@ byte acopt_onfocus(void *x)
 	d->focused    = 1;
 
 	if ((d->focusedItem == -1) && (d->itemn > 0))
-	{
 		d->focusedItem = 0;
-	}
 
 	if ((d->focusedItem != -1) && (d->draweditemn > 0))
-	{
 		acopt_redrawitem(ctl, d->focusedItem);
-	}
 
 	ctl->ondraw(ctl);
 	return 1;
@@ -815,9 +743,7 @@ void acopt_onblur(void *x)
 	d->focused    = 0;
 
 	if ((d->focusedItem != -1) && (d->draweditemn > 0))
-	{
 		acopt_redrawitem(ctl, d->focusedItem);
-	}
 
 	ctl->ondraw(ctl);
 }
@@ -826,14 +752,10 @@ ACONTROLP acopt(AWINDOWP win, int x, int y, int w, int h)
 {
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 20)
-	{
 		w = agdp() * 20;
-	}
 
 	//-- Initializing Text Data
 	ACOPTDP d = (ACOPTDP)malloc(sizeof(ACOPTD));
@@ -876,9 +798,7 @@ ACONTROLP acopt(AWINDOWP win, int x, int y, int w, int h)
 	int i;
 
 	for (i = 0; i < ACOPT_MAX_GROUP; i++)
-	{
 		d->selectedIndexs[i] = -1;
-	}
 
 	d->groupCounts = 0;
 	d->groupCurrId = -1;

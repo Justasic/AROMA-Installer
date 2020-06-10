@@ -512,8 +512,8 @@ void apng_close(PNGCANVAS *pngcanvas);                        // Release PNG Mem
 byte apng_draw(CANVAS *_b, PNGCANVAS *p, int xpos, int ypos); // Draw PNG Into Canvas
 byte apng_stretch(
     CANVAS *_b, PNGCANVAS *p, int dx, int dy, int dw, int dh,
-
     int sx, int sy, int sw, int sh);
+	
 byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad);
 byte apng9_draw(CANVAS *_b, PNGCANVAS *p, int dx, int dy, int dw, int dh, APNG9P v, byte with_pad);
 

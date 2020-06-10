@@ -181,9 +181,7 @@ PNGCANVASP atheme_create(char *key, char *path)
 			if (ln > 2)
 			{
 				if ((path[ln] == '9') && (path[ln - 1] == '.'))
-				{
 					acfg_var.theme_9p[id] = 1;
-				}
 			}
 
 			return ap;
@@ -203,25 +201,17 @@ byte atheme_draw(char *key, CANVAS *_b, int x, int y, int w, int h)
 byte atheme_id_draw(int id, CANVAS *_b, int x, int y, int w, int h)
 {
 	if (id < 0)
-	{
 		return 0;
-	}
 
 	if (id >= AROMA_THEME_CNT)
-	{
 		return 0;
-	}
 
 	if (acfg_var.theme[id] != NULL)
 	{
 		if (acfg_var.theme_9p[id])
-		{
 			return apng9_draw(_b, acfg_var.theme[id], x, y, w, h, NULL, 1);
-		}
 		else
-		{
 			return apng_stretch(_b, acfg_var.theme[id], x, y, w, h, 0, 0, acfg_var.theme[id]->w, acfg_var.theme[id]->h);
-		}
 	}
 
 	return 0;
@@ -234,9 +224,7 @@ PNGCANVASP atheme(char *key)
 	for (i = 0; i < AROMA_THEME_CNT; i++)
 	{
 		if (strcmp(theme_name[i], key) == 0)
-		{
 			return acfg_var.theme[i];
-		}
 	}
 
 	return NULL;
@@ -249,9 +237,7 @@ int atheme_id(char *key)
 	for (i = 0; i < AROMA_THEME_CNT; i++)
 	{
 		if (strcmp(theme_name[i], key) == 0)
-		{
 			return i;
-		}
 	}
 
 	return -1;
@@ -260,14 +246,10 @@ int atheme_id(char *key)
 char *atheme_key(int id)
 {
 	if (id < 0)
-	{
 		return NULL;
-	}
 
 	if (id >= AROMA_THEME_CNT)
-	{
 		return NULL;
-	}
 
 	return theme_name[id];
 }
@@ -282,9 +264,7 @@ AWINDOWP aw(CANVAS *bg)
 	AWINDOWP win = (AWINDOWP)malloc(sizeof(AWINDOW));
 
 	if (win == NULL)
-	{
 		return NULL;
-	}
 
 	//-- Create Canvas & Draw BG
 	ag_canvas(&win->c, agw(), agh());
@@ -320,9 +300,7 @@ void aw_destroy(AWINDOWP win)
 		usleep(500);
 
 		if (threadwait_n++ > 1000)
-		{
 			break;
-		}
 	}
 
 	//-- Cleanup Controls
@@ -355,9 +333,7 @@ void aw_add(AWINDOWP win, ACONTROLP ctl)
 		win->controls  = malloc(sizeof(ACONTROLP) * (win->controln + 1));
 
 		for (i = 0; i < win->controln; i++)
-		{
 			win->controls[i] = tmpctls[i];
-		}
 
 		win->controls[win->controln] = (void *)ctl;
 		free(tmpctls);
@@ -375,9 +351,7 @@ void aw_add(AWINDOWP win, ACONTROLP ctl)
 void aw_draw(AWINDOWP win)
 {
 	if (!win->isActived)
-	{
 		return;
-	}
 
 	ag_draw(NULL, &win->c, 0, 0);
 	ag_sync();
@@ -387,9 +361,7 @@ void aw_draw(AWINDOWP win)
 void aw_redraw_ex(AWINDOWP win, byte syncnow)
 {
 	if (!win->isActived)
-	{
 		return;
-	}
 
 	if (win->controln > 0)
 	{
@@ -400,16 +372,12 @@ void aw_redraw_ex(AWINDOWP win, byte syncnow)
 			ACONTROLP ctl = (ACONTROLP)win->controls[i];
 
 			if (ctl->ondraw != NULL)
-			{
 				ctl->ondraw(ctl);
-			}
 		}
 	}
 
 	if (syncnow)
-	{
 		ag_draw(NULL, &win->c, 0, 0);
-	}
 }
 
 void aw_redraw(AWINDOWP win)
@@ -726,9 +694,7 @@ byte aw_touchoncontrol(ACONTROLP ctl, int x, int y)
 	int wy2 = wy + ctl->h;
 
 	if ((x >= wx) && (x < wx2) && (y >= wy) && (y < wy2))
-	{
 		return 1;
-	}
 
 	return 0;
 }
@@ -737,12 +703,9 @@ byte aw_touchoncontrol(ACONTROLP ctl, int x, int y)
 byte aw_setfocus(AWINDOWP win, ACONTROLP ctl)
 {
 	if (!win->isActived)
-	{
 		return 0;
-	}
 
 	int i;
-
 	for (i = 0; i < win->controln; i++)
 	{
 		ACONTROLP fctl = (ACONTROLP)win->controls[i];
@@ -793,9 +756,8 @@ dword aw_dispatch(AWINDOWP win)
 			case ATEV_MESSAGE:
 			{
 				msg = atev.msg;
+				break;
 			}
-			break;
-
 			case ATEV_MENU:
 			{
 				if (!atev.d)
@@ -805,29 +767,23 @@ dword aw_dispatch(AWINDOWP win)
 						byte resmenu = aw_showmenu(win);
 
 						if (resmenu == 2)
-						{
 							msg = aw_msg(4, 0, 0, 0);
-						}
 					}
 					else if (on_dialog_window == 2)
-					{
 						msg = aw_msg(5, 0, 0, 0);
-					}
 				}
+				break;
 			}
-			break;
-
 			case ATEV_BACK:
 			{
 				if (!atev.d)
-				{
 					msg = aw_msg(5, 0, 0, 0);
-				}
-			}
-			break;
 
+				break;
+			}
 			case ATEV_DOWN:
 			case ATEV_RIGHT:
+			{
 				if (!atev.d)
 				{
 					if (win->focusIndex != -1)
@@ -835,9 +791,7 @@ dword aw_dispatch(AWINDOWP win)
 						ACONTROLP ctl = (ACONTROLP)win->controls[win->focusIndex];
 
 						if (ctl->oninput != NULL)
-						{
 							msg = ctl->oninput((void *)ctl, action, &atev);
-						}
 
 						if (aw_gl(msg) == 0)
 						{
@@ -861,9 +815,10 @@ dword aw_dispatch(AWINDOWP win)
 				}
 
 				break;
-
+			}
 			case ATEV_UP:
 			case ATEV_LEFT:
+			{
 				if (!atev.d)
 				{
 					if (win->focusIndex != -1)
@@ -871,9 +826,7 @@ dword aw_dispatch(AWINDOWP win)
 						ACONTROLP ctl = (ACONTROLP)win->controls[win->focusIndex];
 
 						if (ctl->oninput != NULL)
-						{
 							msg = ctl->oninput((void *)ctl, action, &atev);
-						}
 
 						if (aw_gl(msg) == 0)
 						{
@@ -895,9 +848,8 @@ dword aw_dispatch(AWINDOWP win)
 						}
 					}
 				}
-
 				break;
-
+			}
 			case ATEV_SELECT:
 			{
 				if (win->focusIndex != -1)
@@ -905,13 +857,10 @@ dword aw_dispatch(AWINDOWP win)
 					ACONTROLP ctl = (ACONTROLP)win->controls[win->focusIndex];
 
 					if (ctl->oninput != NULL)
-					{
 						msg = ctl->oninput((void *)ctl, action, &atev);
-					}
 				}
+				break;
 			}
-			break;
-
 			case ATEV_MOUSEDN:
 			{
 				if (win->controln > 0)
@@ -933,9 +882,8 @@ dword aw_dispatch(AWINDOWP win)
 						}
 					}
 				}
+				break;
 			}
-			break;
-
 			case ATEV_MOUSEUP:
 			{
 				if (win->touchIndex != -1)
@@ -943,15 +891,12 @@ dword aw_dispatch(AWINDOWP win)
 					ACONTROLP ctl = (ACONTROLP)win->controls[win->touchIndex];
 
 					if (ctl->oninput != NULL)
-					{
 						msg = ctl->oninput((void *)ctl, action, &atev);
-					}
 
 					win->touchIndex = -1;
 				}
+				break;
 			}
-			break;
-
 			case ATEV_MOUSEMV:
 			{
 				if (win->touchIndex != -1)
@@ -959,14 +904,11 @@ dword aw_dispatch(AWINDOWP win)
 					ACONTROLP ctl = (ACONTROLP)win->controls[win->touchIndex];
 
 					if (ctl->oninput != NULL)
-					{
 						msg = ctl->oninput((void *)ctl, action, &atev);
-					}
 				}
+				break;
 			}
-			break;
 		}
-
 		if (aw_gm(msg) == 200)
 		{
 			if (!atev.d)
@@ -976,26 +918,18 @@ dword aw_dispatch(AWINDOWP win)
 					byte resmenu = aw_showmenu(win);
 
 					if (resmenu == 2)
-					{
 						msg = aw_msg(4, 0, 0, 0);
-					}
 				}
 				else if (on_dialog_window == 2)
-				{
 					msg = aw_msg(5, 0, 0, 0);
-				}
 			}
 		}
 
 		if (aw_gd(msg) == 1)
-		{
 			aw_draw(win);
-		}
 
 		if (aw_gm(msg) != 0)
-		{
 			return msg;
-		}
 	}
 
 	return msg;
@@ -1065,9 +999,7 @@ void aw_unmaskparent(AWINDOWP win, CANVAS *p, CANVAS *maskc, int x, int y, int w
 		if (win == NULL)
 		{
 			if (p != NULL)
-			{
 				wincanvas = p;
-			}
 			else
 			{
 				if (maskc != NULL)
@@ -1081,9 +1013,7 @@ void aw_unmaskparent(AWINDOWP win, CANVAS *p, CANVAS *maskc, int x, int y, int w
 			}
 		}
 		else
-		{
 			wincanvas = &win->c;
-		}
 
 		int fadesz = acfg()->fadeframes;
 
@@ -1129,9 +1059,7 @@ void aw_unmaskparent(AWINDOWP win, CANVAS *p, CANVAS *maskc, int x, int y, int w
 		aw_unmuteparent(win, p);
 	}
 	else
-	{
 		aw_unmuteparent(win, p);
-	}
 }
 
 void aw_textdialog(AWINDOWP parent, char *titlev, char *text, char *ok_text)
@@ -1195,9 +1123,7 @@ void aw_textdialog(AWINDOWP parent, char *titlev, char *text, char *ok_text)
 	int titY = winY + pad;
 
 	if (vtitY != -1)
-	{
 		titY = winY + vtitY;
-	}
 
 	//-- Calculate Text Size & Position
 	int infY = winY + titH + pad;
@@ -1220,9 +1146,7 @@ void aw_textdialog(AWINDOWP parent, char *titlev, char *text, char *ok_text)
 
 	//-- Draw Title
 	if (!atheme_draw("img.dialog.titlebar", &alertbg, winX, winY, winW, titH))
-	{
 		ag_roundgrad_ex(&alertbg, winX, winY, winW, titH, acfg_var.dlgtitlebg, acfg_var.dlgtitlebg_g, acfg_var.roundsz * agdp(), 1, 1, 0, 0);
-	}
 
 	ag_textf(&alertbg, titW, titX + 1, titY + 1, title, acfg_var.dlgtitlebg_g, 1);
 	ag_text(&alertbg, titW, titX, titY, title, acfg_var.dlgtitlefg, 1);
@@ -1323,9 +1247,7 @@ void aw_alert(AWINDOWP parent, char *titlev, char *textv, char *img, char *ok_te
 	int winH = titH + infH + btnH + (pad * 3);
 
 	if (vpadB != -1)
-	{
 		winH = titH + infH + btnH + (pad * 2) + vpadB;
-	}
 
 	int winX = pad;
 	int winY = (agh() / 2) - (winH / 2);
@@ -1334,9 +1256,7 @@ void aw_alert(AWINDOWP parent, char *titlev, char *textv, char *img, char *ok_te
 	int titY = winY + pad;
 
 	if (vtitY != -1)
-	{
 		titY = winY + vtitY;
-	}
 
 	//-- Calculate Text Size & Position
 	int infY = winY + titH + pad;
@@ -1360,9 +1280,7 @@ void aw_alert(AWINDOWP parent, char *titlev, char *textv, char *img, char *ok_te
 
 	//-- Draw Title
 	if (!atheme_draw("img.dialog.titlebar", &alertbg, winX, winY, winW, titH))
-	{
 		ag_roundgrad_ex(&alertbg, winX, winY, winW, titH, acfg_var.dlgtitlebg, acfg_var.dlgtitlebg_g, acfg_var.roundsz * agdp(), 1, 1, 0, 0);
-	}
 
 	ag_textf(&alertbg, titW, titX + 1, titY + 1, title, acfg_var.dlgtitlebg_g, 1);
 	ag_text(&alertbg, titW, titX, titY, title, acfg_var.dlgtitlefg, 1);
@@ -1472,9 +1390,7 @@ byte aw_confirm(AWINDOWP parent, char *titlev, char *textv, char *img, char *yes
 	int winH = titH + infH + btnH + (pad * 3);
 
 	if (vpadB != -1)
-	{
 		winH = titH + infH + btnH + (pad * 2) + vpadB;
-	}
 
 	int winX = pad;
 	int winY = (agh() / 2) - (winH / 2);
@@ -1483,9 +1399,7 @@ byte aw_confirm(AWINDOWP parent, char *titlev, char *textv, char *img, char *yes
 	int titY = winY + pad;
 
 	if (vtitY != -1)
-	{
 		titY = winY + vtitY;
-	}
 
 	//-- Calculate Text Size & Position
 	int infY = winY + titH + pad;
@@ -2100,22 +2014,18 @@ byte aw_showmenu(AWINDOWP parent)
 		switch (aw_gm(msg))
 		{
 			case 5: ondispatch = 0; break;
-
 			case 11:
 				res        = 1;
 				ondispatch = 0;
 				break;
-
 			case 12:
 				res        = 2;
 				ondispatch = 0;
 				break;
-
 			case 13:
 				res        = 3;
 				ondispatch = 0;
 				break;
-
 			case 14:
 				res        = 4;
 				ondispatch = 0;
@@ -2129,25 +2039,17 @@ byte aw_showmenu(AWINDOWP parent)
 	aw_unmuteparent(parent, tmpc);
 
 	if (res == 1)
-	{
 		aw_about_dialog(parent);
-	}
 	else if (res == 2)
-	{
 		aw_help_dialog(parent);
-	}
 	else if (res == 3)
-	{
 		aw_calibtools(parent);
-	}
 	else if (res == 4)
 	{
 		byte res = aw_confirm(parent, AROMA_NAME " " AROMA_VERSION, acfg_var.text_quit_msg, "@alert", NULL, NULL);
 
 		if (res)
-		{
 			return 2;
-		}
 	}
 
 	return 0;

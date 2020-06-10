@@ -60,9 +60,7 @@ static byte INDR_calibrate(AINPUTP me, INDR_POSP p, int* x, int* y)
 
 	/* Check Result */
 	if (*x >= 0 && *x < fb_width && *y >= 0 && *y < fb_height)
-	{
 		return 1;
-	}
 
 	/* Not OK */
 	return 0;
@@ -260,9 +258,7 @@ byte INDR_translate_touch(AINPUTP me, INDR_DEVICEP dev, AINPUT_EVENTP dest_ev, s
 		if ((dev->p.state & INDR_POS_ST_SYNC_X) && (dev->p.state & INDR_POS_ST_SYNC_Y))
 		{
 			if (!INDR_calibrate(me, &dev->p, &cx, &cy))
-			{
 				goto return_none;
-			}
 		}
 		else
 		{
@@ -279,20 +275,14 @@ byte INDR_translate_touch(AINPUTP me, INDR_DEVICEP dev, AINPUT_EVENTP dest_ev, s
 		}
 
 		if (mi->touch_flip_x)
-		{
 			cx = me->screen_width - cx;
-		}
 
 		if (mi->touch_flip_y)
-		{
 			cy = me->screen_height - cy;
-		}
 
 		/* If we have nothing useful to report, skip it */
 		if (cx == -1 || cy == -1)
-		{
 			goto return_none;
-		}
 
 		/* Reset Last Sync XY Event */
 		dev->p.state &= ~INDR_POS_ST_SYNC_X;

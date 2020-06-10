@@ -45,24 +45,21 @@ dword accb_oninput(void *x, int action, ATEV *atev)
 			vibrate(30);
 			d->pushed = 1;
 			msg       = aw_msg(0, 1, 0, 0);
-			ctl->ondraw(ctl);
-		}
-		break;
 
+			ctl->ondraw(ctl);
+			break;
+		}
 		case ATEV_MOUSEUP:
 		{
 			d->pushed = 0;
 
 			if (aw_touchoncontrol(ctl, atev->x, atev->y))
-			{
 				d->checked = !d->checked;
-			}
 
 			msg = aw_msg(0, 1, 0, 0);
 			ctl->ondraw(ctl);
+			break;
 		}
-		break;
-
 		case ATEV_SELECT:
 		{
 			if (atev->d)
@@ -78,8 +75,8 @@ dword accb_oninput(void *x, int action, ATEV *atev)
 
 			msg = aw_msg(0, 1, 0, 0);
 			ctl->ondraw(ctl);
+			break;
 		}
-		break;
 	}
 
 	return msg;
@@ -101,49 +98,31 @@ void accb_ondraw(void *x)
 	if (!d->checked)
 	{
 		if (d->pushed)
-		{
 			drawed = atheme_draw("img.checkbox.push", pc, ctl->x + halfdp, ctl->y + chkY - minpad, d->chkS + addpad, d->chkS + addpad);
-		}
 		else if (d->focused)
-		{
 			drawed = atheme_draw("img.checkbox.focus", pc, ctl->x + halfdp, ctl->y + chkY - minpad, d->chkS + addpad, d->chkS + addpad);
-		}
 		else
-		{
 			drawed = atheme_draw("img.checkbox", pc, ctl->x + halfdp, ctl->y + chkY - minpad, d->chkS + addpad, d->chkS + addpad);
-		}
 	}
 	else
 	{
 		if (d->pushed)
-		{
 			drawed = atheme_draw("img.checkbox.on.push", pc, ctl->x + halfdp, ctl->y + chkY - minpad, d->chkS + addpad, d->chkS + addpad);
-		}
 		else if (d->focused)
-		{
 			drawed = atheme_draw("img.checkbox.on.focus", pc, ctl->x + halfdp, ctl->y + chkY - minpad, d->chkS + addpad, d->chkS + addpad);
-		}
 		else
-		{
 			drawed = atheme_draw("img.checkbox.on", pc, ctl->x + halfdp, ctl->y + chkY - minpad, d->chkS + addpad, d->chkS + addpad);
-		}
 	}
 
 	//-- Generic Draw
 	if (!drawed)
 	{
 		if (d->pushed)
-		{
 			ag_roundgrad(pc, minpad + ctl->x + halfdp, ctl->y + chkY, d->chkS, d->chkS, acfg()->selectbg_g, acfg()->selectbg, 0);
-		}
 		else if (d->focused)
-		{
 			ag_roundgrad(pc, minpad + ctl->x + halfdp, ctl->y + chkY, d->chkS, d->chkS, acfg()->selectbg, acfg()->selectbg_g, 0);
-		}
 		else
-		{
 			ag_roundgrad(pc, minpad + ctl->x + halfdp, ctl->y + chkY, d->chkS, d->chkS, acfg()->controlbg_g, acfg()->controlbg, 0);
-		}
 
 		ag_roundgrad(pc, minpad + ctl->x + halfdp2, ctl->y + chkY + halfdp, d->chkS - halfdp2, d->chkS - halfdp2, acfg()->textbg, acfg()->textbg, 0);
 
@@ -191,14 +170,10 @@ ACONTROLP accb(AWINDOWP win, int x, int y, int w, int h, char *textv, byte check
 {
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 16)
-	{
 		w = agdp() * 16;
-	}
 
 	//-- Limit Title Length
 	char title[128];
@@ -223,9 +198,7 @@ ACONTROLP accb(AWINDOWP win, int x, int y, int w, int h, char *textv, byte check
 	int txtY   = ((h - txtH) / 2);
 
 	if (txtY < 1)
-	{
 		txtY = 1;
-	}
 
 	ag_textf(&d->control, txtW, minpad + txtX, txtY, title, acfg()->textbg, 0);
 	ag_text(&d->control, txtW, minpad + txtX - 1, txtY - 1, title, acfg()->textfg, 0);

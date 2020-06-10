@@ -143,14 +143,10 @@ byte aft_isrtl(int c, byte checkleft)
 byte aft_createglyph(AFTFACEP f)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if (f == NULL)
-	{
 		return 0;
-	}
 
 	f->cache_n = f->face->num_glyphs;
 	int sz     = f->cache_n * sizeof(AFTGLYPH);
@@ -165,14 +161,10 @@ byte aft_createglyph(AFTFACEP f)
 byte aft_closeglyph(AFTFACEP f)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if (f == NULL)
-	{
 		return 0;
-	}
 
 	if (f->cache != NULL)
 	{
@@ -201,19 +193,13 @@ byte aft_closeglyph(AFTFACEP f)
 byte aft_cacheglyph(AFTFACEP f, long id)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if (f == NULL)
-	{
 		return 0;
-	}
 
 	if (f->cache_n < id)
-	{
 		return 0;
-	}
 
 	if (!f->cache[id].init)
 	{
@@ -232,21 +218,15 @@ byte aft_cacheglyph(AFTFACEP f, long id)
 long aft_id(AFTFACEP* f, int c, byte isbig)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if (c == 0xfeff)
-	{
 		return 0;
-	}
 
 	AFTFAMILYP m = (isbig != 0) ? &aft_big : &aft_small;
 
 	if (!m->init)
-	{
 		return 0;
-	}
 
 	if (m->facen > 0)
 	{
@@ -280,21 +260,15 @@ long aft_id(AFTFACEP* f, int c, byte isbig)
 int aft_kern(int c, int p, byte isbig)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if ((c == 0xfeff) || (p == 0xfeff))
-	{
 		return 0;
-	}
 
 	AFTFAMILYP m = (isbig != 0) ? &aft_big : &aft_small;
 
 	if (!m->init)
-	{
 		return 0;
-	}
 
 	AFTFACEP cf = NULL;
 	AFTFACEP pf = NULL;
@@ -325,19 +299,13 @@ int aft_kern(int c, int p, byte isbig)
 byte aft_free(AFTFAMILYP m)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if (m == NULL)
-	{
 		return 0;
-	}
 
 	if (!m->init)
-	{
 		return 0;
-	}
 
 	int fn   = m->facen;
 	m->facen = 0;
@@ -366,9 +334,7 @@ byte aft_free(AFTFAMILYP m)
 byte aft_load(const char* source_name, int size, byte isbig, char* relativeto)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	const char* zip_paths = source_name;
 	char        vc        = 0;
@@ -379,14 +345,10 @@ byte aft_load(const char* source_name, int size, byte isbig, char* relativeto)
 	while ((vc = *zip_paths++))
 	{
 		if ((zpath_n >= 255) || (count >= 10))
-		{
 			break;
-		}
 
 		if (zpath_n == 0)
-		{
 			count++;
-		}
 
 		if (vc == ';')
 		{
@@ -402,14 +364,10 @@ byte aft_load(const char* source_name, int size, byte isbig, char* relativeto)
 
 	//-- Calculating Size
 	if (!size)
-	{
 		size = 12; //-- Default Font Size
-	}
 
 	if (count > 10)
-	{
 		count = 10; //-- Maximum Font per Family
-	}
 
 	byte m_s = size;
 	byte m_p = ceil((agdp() * m_s) / 2);
@@ -445,9 +403,7 @@ byte aft_load(const char* source_name, int size, byte isbig, char* relativeto)
 					}
 				}
 				else
-				{
 					free(mem.data);
-				}
 			}
 		}
 	}
@@ -490,9 +446,7 @@ byte aft_load(const char* source_name, int size, byte isbig, char* relativeto)
 byte aft_open()
 {
 	if (aft_initialized)
-	{
 		return 0;
-	}
 
 	aft_big.init   = 0;
 	aft_small.init = 0;
@@ -513,16 +467,12 @@ byte aft_open()
 byte aft_fontready(byte isbig)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	AFTFAMILYP m = (isbig) ? &aft_big : &aft_small;
 
 	if (!m->init)
-	{
 		return 0;
-	}
 
 	return 1;
 }
@@ -533,9 +483,7 @@ byte aft_fontready(byte isbig)
 byte aft_close()
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	//-- Release All Font Family
 	aft_free(&aft_big);
@@ -556,32 +504,22 @@ byte aft_close()
 int aft_fontwidth_lock(int c, byte isbig, AFTGLYPHP* ch, byte* onlock)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	if (c == 0xfeff)
-	{
 		return 0;
-	}
 
 	AFTFACEP f  = NULL;
 	long     uc = aft_id(&f, c, isbig);
 
 	if (f == NULL)
-	{
 		return 0;
-	}
 
 	if (f->cache == NULL)
-	{
 		return 0;
-	}
 
 	if (uc > f->cache_n)
-	{
 		return 0;
-	}
 
 	aft_waitlock();
 	*onlock = 1;
@@ -589,9 +527,7 @@ int aft_fontwidth_lock(int c, byte isbig, AFTGLYPHP* ch, byte* onlock)
 	if (f->cache[uc].init)
 	{
 		if (ch != NULL)
-		{
 			*ch = &f->cache[uc];
-		}
 
 		return f->cache[uc].w;
 	}
@@ -601,9 +537,7 @@ int aft_fontwidth_lock(int c, byte isbig, AFTGLYPHP* ch, byte* onlock)
 		if (aft_cacheglyph(f, uc))
 		{
 			if (ch != NULL)
-			{
 				*ch = &f->cache[uc];
-			}
 
 			return f->cache[uc].w;
 		}
@@ -620,17 +554,13 @@ int aft_fontwidth_lock(int c, byte isbig, AFTGLYPHP* ch, byte* onlock)
 int aft_fontwidth(int c, byte isbig)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	byte onlock = 0;
 	int  w      = aft_fontwidth_lock(c, isbig, NULL, &onlock);
 
 	if (onlock)
-	{
 		aft_unlock();
-	}
 
 	return w;
 }
@@ -641,9 +571,7 @@ int aft_fontwidth(int c, byte isbig)
 int aft_spacewidth(byte isbig)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	return aft_fontwidth(' ', isbig);
 }
@@ -654,16 +582,12 @@ int aft_spacewidth(byte isbig)
 byte aft_fontheight(byte isbig)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	AFTFAMILYP m = (isbig) ? &aft_big : &aft_small;
 
 	if (!m->init)
-	{
 		return 0;
-	}
 
 	return m->h;
 }
@@ -672,17 +596,11 @@ byte aft_fontheight(byte isbig)
 color aAlphaMulti(color dcl, color scl, byte lr, byte lg, byte lb)
 {
 	if (scl == dcl)
-	{
 		return scl;
-	}
 	else if (lr + lg + lb == 0)
-	{
 		return dcl;
-	}
 	else if (lr + lg + lb == 765)
-	{
 		return scl;
-	}
 
 	byte rr = 255 - lr;
 	byte rg = 255 - lg;
@@ -699,23 +617,17 @@ color aAlphaMulti(color dcl, color scl, byte lr, byte lg, byte lb)
 byte aft_drawfont(CANVAS* _b, byte isbig, int fpos, int xpos, int ypos, color cl, byte underline, byte bold, byte italic, byte lcd)
 {
 	if (!aft_initialized)
-	{
 		return 0;
-	}
 
 	//-- Is Default Canvas?
 	if (_b == NULL)
-	{
 		_b = agc();
-	}
 
 	//-- Get Font Glyph
 	AFTFAMILYP m = (isbig) ? &aft_big : &aft_small;
 
 	if (!m->init)
-	{
 		return 0;
-	}
 
 	AFTGLYPHP ch     = NULL;
 	byte      onlock = 0;
@@ -726,9 +638,7 @@ byte aft_drawfont(CANVAS* _b, byte isbig, int fpos, int xpos, int ypos, color cl
 	if ((fw == 0) || (ch == NULL))
 	{
 		if (onlock)
-		{
 			aft_unlock();
-		}
 
 		return 0;
 	}
@@ -736,9 +646,7 @@ byte aft_drawfont(CANVAS* _b, byte isbig, int fpos, int xpos, int ypos, color cl
 	if (!ch->init)
 	{
 		if (onlock)
-		{
 			aft_unlock();
-		}
 
 		return 0;
 	}
@@ -771,22 +679,16 @@ byte aft_drawfont(CANVAS* _b, byte isbig, int fpos, int xpos, int ypos, color cl
 	}
 
 	if (lcd)
-	{
 		FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_LCD, 0, 1);
-	}
 	else
-	{
 		FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
-	}
 
 	//-- Prepare Raster Glyph
 	FT_BitmapGlyph bit = (FT_BitmapGlyph)glyph;
 
 	/* Bitmap Embolden  - BOLD */
 	if ((bold) && (!embolded))
-	{
 		FT_Bitmap_Embolden(bit->root.library, &bit->bitmap, 80, 80);
-	}
 
 	//-- Draw
 	if (lcd)
@@ -810,9 +712,7 @@ byte aft_drawfont(CANVAS* _b, byte isbig, int fpos, int xpos, int ypos, color cl
 					color* dst = agxy(_b, bx, by);
 
 					if (dst)
-					{
 						*dst = aAlphaMulti(*dst, cl, ar, ag, ab);
-					}
 				}
 			}
 		}
@@ -851,17 +751,13 @@ byte aft_drawfont(CANVAS* _b, byte isbig, int fpos, int xpos, int ypos, color cl
 		for (uy = m->p - usz; uy < m->p; uy++)
 		{
 			for (ux = 0; ux < fw; ux++)
-			{
 				ag_setpixel(_b, xpos + ux, ypos + uy, cl);
-			}
 		}
 	}
 
 	//-- Unlock
 	if (onlock)
-	{
 		aft_unlock();
-	}
 
 	return 1;
 }

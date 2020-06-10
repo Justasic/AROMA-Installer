@@ -44,9 +44,7 @@ void apng_readfn(png_structp pngPtr, png_bytep data, png_size_t length)
 	APNG_DATA *cpng = (APNG_DATA *)a;
 
 	if (cpng->pos + length >= cpng->len)
-	{
 		length = cpng->len - cpng->pos;
-	}
 
 	if (length)
 	{
@@ -59,24 +57,16 @@ void apng_readfn(png_structp pngPtr, png_bytep data, png_size_t length)
 void apng_close(PNGCANVAS *pngcanvas)
 {
 	if (pngcanvas->r != NULL)
-	{
 		free(pngcanvas->r);
-	}
 
 	if (pngcanvas->g != NULL)
-	{
 		free(pngcanvas->g);
-	}
 
 	if (pngcanvas->b != NULL)
-	{
 		free(pngcanvas->b);
-	}
 
 	if (pngcanvas->a != NULL)
-	{
 		free(pngcanvas->a);
-	}
 
 	pngcanvas->r = NULL;
 	pngcanvas->g = NULL;
@@ -95,25 +85,19 @@ byte apng_load(PNGCANVAS *pngcanvas, char *imgname)
 		icotheme_name++;
 
 		if (strcmp(acfg()->themename, "") == 0)
-		{
 			snprintf(zpath, 255, "%s/icons/%s.png", AROMA_DIR, icotheme_name);
-		}
 		else
 		{
 			snprintf(zpath, 255, "themes/%s/icon.%s", acfg()->themename, icotheme_name);
 
 			if (apng_load(pngcanvas, zpath))
-			{
 				return 1;
-			}
 
 			snprintf(zpath, 255, "%s/icons/%s.png", AROMA_DIR, icotheme_name);
 		}
 	}
 	else
-	{
 		snprintf(zpath, 255, "%s/%s.png", AROMA_DIR, imgname);
-	}
 
 	memset(pngcanvas, 0, sizeof(PNGCANVAS));
 	png_structp png_ptr  = NULL;
@@ -124,9 +108,7 @@ byte apng_load(PNGCANVAS *pngcanvas, char *imgname)
 	AZMEM data_png;
 
 	if (!az_readmem(&data_png, zpath, 1))
-	{
 		return 0;
-	}
 
 	//-- CREATE PNG ARGUMENT
 	APNG_DATA apng_data;
@@ -139,31 +121,23 @@ byte apng_load(PNGCANVAS *pngcanvas, char *imgname)
 
 	//-- COMPARE
 	if (png_sig_cmp(header, 0, sizeof(header)))
-	{
 		goto exit;
-	}
 
 	//-- CREATE READ STRUCTURE
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
 	if (!png_ptr)
-	{
 		goto exit;
-	}
 
 	//-- CREATE INFO STRUCTURE
 	info_ptr = png_create_info_struct(png_ptr);
 
 	if (!info_ptr)
-	{
 		goto exit;
-	}
 
 	//-- JMP
 	if (setjmp(png_jmpbuf(png_ptr)))
-	{
 		goto exit;
-	}
 
 	//-- SET FUNCTION
 	png_set_read_fn(png_ptr, &apng_data, apng_readfn);
@@ -198,13 +172,9 @@ byte apng_load(PNGCANVAS *pngcanvas, char *imgname)
 	pngcanvas->b = malloc(pngcanvas->s);
 
 	if (pngcanvas->c == 4)
-	{
 		pngcanvas->a = malloc(pngcanvas->s);
-	}
 	else
-	{
 		pngcanvas->a = NULL;
-	}
 
 	//-- READ ROWS
 	int       row_sz   = (int)png_get_rowbytes(png_ptr, info_ptr);
@@ -228,9 +198,7 @@ byte apng_load(PNGCANVAS *pngcanvas, char *imgname)
 
 			//-- SAVE ALPHA CHANNEL
 			if (pngcanvas->c == 4)
-			{
 				pngcanvas->a[dx] = row_data[sx + 3];
-			}
 		}
 	}
 
@@ -246,9 +214,7 @@ exit:
 byte apng_draw(CANVAS *_b, PNGCANVAS *p, int xpos, int ypos)
 {
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	return apng_draw_ex(_b, p, xpos, ypos, 0, 0, p->w, p->h);
 }
@@ -256,19 +222,13 @@ byte apng_draw(CANVAS *_b, PNGCANVAS *p, int xpos, int ypos)
 byte apng_draw_ex(CANVAS *_b, PNGCANVAS *p, int xpos, int ypos, int sxpos, int sypos, int sw, int sh)
 {
 	if (_b == NULL)
-	{
 		_b = agc();
-	}
 
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	if (p->s == 0)
-	{
 		return 0;
-	}
 
 	//-- Quantizer Error Dithering Data Termporary
 	int   qz = sw * 6; // p->s * 3;
@@ -301,9 +261,7 @@ byte apng_draw_ex(CANVAS *_b, PNGCANVAS *p, int xpos, int ypos, int sxpos, int s
 			{
 				//-- Leave The Transparent
 				if (p->a[sx] == 0)
-				{
 					continue;
-				}
 
 				if (p->a[sx] == 255)
 				{
@@ -373,9 +331,7 @@ byte apng_loadfont(PNGFONTS *pngfont, const char *imgname)
 	printf("Loading PNG : %s\n", zpath);
 
 	if (!az_readmem(&data_png, zpath, 1))
-	{
 		return 0;
-	}
 
 	printf("Loading PNG : %s OK\n", zpath);
 	//-- CREATE PNG ARGUMENT
@@ -397,23 +353,17 @@ byte apng_loadfont(PNGFONTS *pngfont, const char *imgname)
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
 	if (!png_ptr)
-	{
 		goto exit;
-	}
 
 	//-- CREATE INFO STRUCTURE
 	info_ptr = png_create_info_struct(png_ptr);
 
 	if (!info_ptr)
-	{
 		goto exit;
-	}
 
 	//-- JMP
 	if (setjmp(png_jmpbuf(png_ptr)))
-	{
 		goto exit;
-	}
 
 	//-- SET FUNCTION
 	png_set_read_fn(png_ptr, &apng_data, apng_readfn);
@@ -506,24 +456,16 @@ void apng_closefont(PNGFONTS *p)
 byte apng_drawfont(CANVAS *_b, PNGFONTS *p, byte fpos, int xpos, int ypos, color cl, byte underline, byte bold)
 {
 	if (_b == NULL)
-	{
 		_b = agc();
-	}
 
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	if (p->loaded == 0)
-	{
 		return 0;
-	}
 
 	if (fpos > 95)
-	{
 		return 0;
-	}
 
 	//-- Quantizer Error Dithering Data Termporary
 	byte  fw = p->fw[fpos];
@@ -554,9 +496,7 @@ byte apng_drawfont(CANVAS *_b, PNGFONTS *p, byte fpos, int xpos, int ypos, color
 				color *dstp = agxy(_b, x + xpos, y + ypos);
 
 				if (dstp == NULL)
-				{
 					continue;
-				}
 
 				color dcolor = dstp[0]; //-- Destination Color
 				dr           = ag_r(dcolor);
@@ -569,9 +509,7 @@ byte apng_drawfont(CANVAS *_b, PNGFONTS *p, byte fpos, int xpos, int ypos, color
 				color *dstp = agxy(_b, x + xpos, y + ypos);
 
 				if (dstp == NULL)
-				{
 					continue;
-				}
 
 				color dcolor = dstp[0]; //-- Destination Color
 				byte  ralpha = 255 - a;
@@ -611,9 +549,7 @@ byte apng_drawfont(CANVAS *_b, PNGFONTS *p, byte fpos, int xpos, int ypos, color
 			if (underline)
 			{
 				if (y == (p->fh - 1))
-				{
 					ag_setpixel(_b, x + xpos, y + ypos, cl);
-				}
 			}
 		}
 	}
@@ -626,14 +562,10 @@ byte apng_drawfont(CANVAS *_b, PNGFONTS *p, byte fpos, int xpos, int ypos, color
 byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 {
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	if (p->s == 0)
-	{
 		return 0;
-	}
 
 	int ts = p->w; //-- Top Start
 	int te = 0;    //-- Top End
@@ -652,14 +584,10 @@ byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 		if (p->a[x] == 255)
 		{
 			if (x < ts)
-			{
 				ts = x;
-			}
 
 			if (x > te)
-			{
 				te = x;
-			}
 		}
 
 		if (with_pad)
@@ -667,14 +595,10 @@ byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 			if (p->a[x + bottompos] == 255)
 			{
 				if (x < bs)
-				{
 					bs = x;
-				}
 
 				if (x > be)
-				{
 					be = x;
-				}
 			}
 		}
 	}
@@ -686,14 +610,10 @@ byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 		if (p->a[ypos] == 255)
 		{
 			if (y < ls)
-			{
 				ls = y;
-			}
 
 			if (y > le)
-			{
 				le = y;
-			}
 		}
 
 		if (with_pad)
@@ -701,14 +621,10 @@ byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 			if (p->a[ypos + (p->w - 1)] == 255)
 			{
 				if (y < rs)
-				{
 					rs = y;
-				}
 
 				if (y > re)
-				{
 					re = y;
-				}
 			}
 		}
 	}
@@ -735,9 +651,7 @@ byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 		v->r = (p->w - 1) - ((bs + be));
 	}
 	else
-	{
 		v->t = v->b = v->l = v->r = 0;
-	}
 
 	return 1;
 }
@@ -745,31 +659,21 @@ byte apng9_calc(PNGCANVAS *p, APNG9P v, byte with_pad)
 byte apng9_draw(CANVAS *_b, PNGCANVAS *p, int dx, int dy, int dw, int dh, APNG9P v, byte with_pad)
 {
 	if (_b == NULL)
-	{
 		_b = agc();
-	}
 
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	if (p->s == 0)
-	{
 		return 0;
-	}
 
 	if ((dh < 3) || (dw < 3))
-	{
 		return 1;
-	}
 
 	APNG9 tmpv;
 
 	if (v == NULL)
-	{
 		v = &tmpv;
-	}
 
 	apng9_calc(p, v, with_pad);
 	int minW = floor((dw - 2) / 2);
@@ -810,29 +714,19 @@ byte apng_stretch(
     int sx, int sy, int wSrc, int hSrc)
 {
 	if (_b == NULL)
-	{
 		_b = agc();
-	}
 
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	if (p->s == 0)
-	{
 		return 0;
-	}
 
 	if ((hDst < 1) || (wDst < 1) || (hSrc < 1) || (wSrc < 1))
-	{
 		return 0;
-	}
 
 	if ((hDst < 2) || (wDst < 2) || (hSrc < 2) || (wSrc < 2))
-	{
 		return apng_stretch_(_b, p, dx, dy, wDst, hDst, sx, sy, wSrc, hSrc);
-	}
 
 	unsigned int wStepFixed16b, hStepFixed16b, wCoef, hCoef, x, y;
 	unsigned int hc1, hc2, wc1, wc2, offsetX, offsetY;
@@ -901,24 +795,16 @@ byte apng_stretch_(
     int sx, int sy, int sw, int sh)
 {
 	if (_b == NULL)
-	{
 		_b = agc();
-	}
 
 	if (p == NULL)
-	{
 		return 0;
-	}
 
 	if (p->s == 0)
-	{
 		return 0;
-	}
 
 	if ((dh < 1) || (dw < 1) || (sh < 1) || (sw < 1))
-	{
 		return 0;
-	}
 
 	//-- Quantizer Error Dithering Data Termporary
 	int   ds = dw * dh;
@@ -963,9 +849,7 @@ byte apng_stretch_(
 				{
 					//-- Leave The Transparent
 					if (p->a[spos] == 0)
-					{
 						continue;
-					}
 
 					if (p->a[spos] == 255)
 					{
@@ -979,9 +863,7 @@ byte apng_stretch_(
 						color *dstp = agxy(_b, dpx, dpy);
 
 						if (dstp == NULL)
-						{
 							continue;
-						}
 
 						//-- Destination Color
 						color dcolor = dstp[0];

@@ -58,23 +58,17 @@ void ai_rebuildtxt(int cx, int cy, int cw, int ch)
 	struct stat st;
 
 	if (stat(AROMA_INSTALL_TXT, &st) < 0)
-	{
 		return;
-	}
 
 	buffer = malloc(st.st_size + 1);
 
 	if (buffer == NULL)
-	{
 		goto done;
-	}
 
 	FILE *f = fopen(AROMA_INSTALL_TXT, "rb");
 
 	if (f == NULL)
-	{
 		goto done;
-	}
 
 	if (fread(buffer, 1, st.st_size, f) != st.st_size)
 	{
@@ -95,9 +89,7 @@ char *ai_fixlen(char *str, char *addstr)
 	int clen = ag_txtwidth(str, 0);
 
 	if (clen < maxw)
-	{
 		return NULL;
-	}
 
 	int  basepos = 0;
 	int  i       = 0;
@@ -113,29 +105,21 @@ char *ai_fixlen(char *str, char *addstr)
 			snprintf(basestr, 63, "%s", &(str[i]));
 
 			if (i > 0)
-			{
 				snprintf(allstr, 127, "/%c%c..%s", str[1], str[2], basestr);
-			}
 			else
-			{
 				snprintf(allstr, 127, "%s", basestr);
-			}
 
 			break;
 		}
 	}
 
 	if (basepos > 50)
-	{
 		basepos = 50;
-	}
 
 	do
 	{
 		if (basepos <= 0)
-		{
 			break;
-		}
 
 		char dirstr[64];
 		memset(dirstr, 0, 64);
@@ -165,9 +149,7 @@ void ai_dump_logs()
 		byte cpres = alib_copy(AROMA_INSTALL_LOG, dumpname);
 
 		if (cpres == 1)
-		{
 			aw_alert(ai_win, "Save Install Log", "Install Logs has been saved...", "@info", NULL);
-		}
 		else
 		{
 			char errstr[3][64] = {"No Log Available", "Cannot create log file", "Error read & write log"};
@@ -268,13 +250,9 @@ static void *aroma_install_package(void *cookie)
 			ai_progress_fract_l = alib_tick();
 
 			if (ai_progress_fract_n > 0)
-			{
 				ai_progress_fract = progsize / ai_progress_fract_n;
-			}
 			else if (ai_progress_fract_n < 0)
-			{
 				ai_progress_fract = progsize / abs(ai_progress_fract_n);
-			}
 			else
 			{
 				ai_progress_fract = 0;
@@ -335,9 +313,7 @@ static void *aroma_install_package(void *cookie)
 					free(fstr);
 				}
 				else
-				{
 					snprintf(ai_progress_info, 100, "<#selectbg_g>Extract:</#>%s", filename);
-				}
 
 				fprintf(fp, "    Extract: %s\n", filename);
 
@@ -369,13 +345,9 @@ static void *aroma_install_package(void *cookie)
 	waitpid(pid, &ai_return_status, 0);
 
 	if (!WIFEXITED(ai_return_status) || WEXITSTATUS(ai_return_status) != 0)
-	{
 		snprintf(buffer, 1023, "Installer Error (Status %d)", WEXITSTATUS(ai_return_status));
-	}
 	else
-	{
 		snprintf(buffer, 1023, "Installer Sucessfull (Status %d)", WEXITSTATUS(ai_return_status));
-	}
 
 	// LOGS("Installer: Wait Finished\n");
 	time(&rawtime);
@@ -431,14 +403,10 @@ static void *ac_progressthread(void *cookie)
 
 		//-- Safe Progress
 		if (ai_progress_pos > 1)
-		{
 			ai_progress_pos = 1.0;
-		}
 
 		if (ai_progress_pos < 0)
-		{
 			ai_progress_pos = 0.0;
-		}
 
 		int prog_g = ai_prog_w; //-(ai_prog_r*2);
 		int prog_w = round(ai_prog_w * ai_progress_pos);
@@ -459,9 +427,7 @@ static void *ac_progressthread(void *cookie)
 			ai_progress_w += diff;
 
 			if (ai_progress_w > prog_w)
-			{
 				ai_progress_w = prog_w;
-			}
 		}
 		else if (ai_progress_w > prog_w)
 		{
@@ -469,9 +435,7 @@ static void *ac_progressthread(void *cookie)
 			ai_progress_w -= diff;
 
 			if (ai_progress_w < prog_w)
-			{
 				ai_progress_w = prog_w;
-			}
 		}
 
 		int issmall = -1;
@@ -491,9 +455,7 @@ static void *ac_progressthread(void *cookie)
 			ag_roundgrad_ex(ai_cv, ai_prog_x, ai_prog_y, ai_progress_w, ceil((ai_prog_h) / 2.0), LOWORD(hl1), HIWORD(hl1), ai_prog_r, 2, 2, 0, 0);
 
 			if (issmall >= 0)
-			{
 				ag_draw_ex(ai_cv, ai_bg, ai_prog_x + issmall, ai_prog_oy, ai_prog_x + issmall, ai_prog_oy, (ai_prog_r * 2), ai_prog_oh);
-			}
 		}
 
 		ag_textfs(ai_cv, ptx1_w, ptx1_x + 1, ptxt_y + 1, ai_progress_text, acfg()->winbg, 0);
@@ -505,9 +467,7 @@ static void *ac_progressthread(void *cookie)
 		prog_g = ai_prog_w - (ai_prog_r * 2);
 
 		if (++ai_progani_pos > 60)
-		{
 			ai_progani_pos = 0;
-		}
 
 		int x     = ai_progani_pos;
 		int hpos  = prog_g / 2;
@@ -528,23 +488,15 @@ static void *ac_progressthread(void *cookie)
 				if ((vn > 0))
 				{
 					if (vn < hhpos)
-					{
 						alp = (((hhpos - vn) * 255) / hhpos);
-					}
 					else if (vn < hpos)
-					{
 						alp = (((vn - hhpos) * 255) / hhpos);
-					}
 				}
 
 				if (xx < sgmp)
-				{
 					alx = 1.0 - (((float)(sgmp - xx)) / sgmp);
-				}
 				else if (xx > prog_g - sgmp)
-				{
 					alx = 1.0 - (((float)(xx - (prog_g - sgmp))) / sgmp);
-				}
 
 				int  alpha = min(max(alx * (255 - alp), 0), 255);
 				int  anix  = ai_prog_x + ai_prog_r + xx;
@@ -593,13 +545,9 @@ void aroma_init_install(CANVAS *bg, int cx, int cy, int cw, int ch, int px, int 
 	ai_prog_ow = pw;
 
 	if (ai_prog_oh > ph)
-	{
 		ai_prog_oh = ph;
-	}
 	else
-	{
 		ai_prog_oy = (ph / 2) - (ai_prog_oh / 2);
-	}
 
 	ai_prog_oy += py;
 	ai_prog_or = ai_prog_oh / 2;
@@ -678,20 +626,18 @@ int aroma_start_install(CANVAS *bg, int cx, int cy, int cw, int ch, int px, int 
 				ACONTROLP nxtbtn = imgbtn(hWin, nPad + nWidth + nHeight, nY, nWidth, nHeight, aui_next_icon(), acfg()->text_next, 5, 6);
 				// ACONTROLP menubtn = imgbtn(hWin, nPad + nWidth, nY, nHeight, nHeight, aui_menu_icon(), NULL, 4, 200);
 				aw_show_ex(hWin, 4, 0, nxtbtn);
+				break;
 			}
-			break;
-
 			case 6:
 			{
 				ondispatch = 0;
+				break;
 			}
-			break;
-
 			case 8:
 			{
 				ai_dump_logs();
+				break;
 			}
-			break;
 		}
 	}
 

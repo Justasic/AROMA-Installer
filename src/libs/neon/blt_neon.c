@@ -11,14 +11,10 @@ void aBlt32_neon(int n, dword *dst, const word *src, byte clset)
 		if (clset)
 		{
 			for (i = 0; i < n; i++)
-			{
 				dst[i] = (ag_r(src[i]) << colorspace_positions[0]) | (ag_g(src[i]) << colorspace_positions[1]) | (ag_b(src[i]) << colorspace_positions[2]);
-			}
 		}
 		else
-		{
 			dst[i] = (ag_r(src[i]) << 16) | (ag_g(src[i]) << 8) | ag_b(src[i]);
-		}
 
 		return;
 	}

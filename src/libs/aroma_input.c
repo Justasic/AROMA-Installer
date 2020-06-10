@@ -83,9 +83,7 @@ dword atouch_winmsg_get(byte cleanup)
 			int i = 0;
 
 			for (i = 0; i < atouch_winmsg_n; i++)
-			{
 				atouch_winmsg[i] = atouch_winmsg[i + 1];
-			}
 
 			atouch_winmsg_n--;
 		}
@@ -126,18 +124,14 @@ int vibrate(int timeout_ms)
 	fd = open("/sys/class/timed_output/vibrator/enable", O_WRONLY);
 
 	if (fd < 0)
-	{
 		return -1;
-	}
 
 	ret = snprintf(str, sizeof(str), "%d", (int)round((float)timeout_ms * vibrate_rate));
 	ret = write(fd, str, ret);
 	close(fd);
 
 	if (ret < 0)
-	{
 		return -1;
-	}
 
 	return 0;
 }
@@ -174,14 +168,10 @@ void ev_post_message(int key, int value)
 void ev_input_callback(byte touch, int key, byte state, int x, int y)
 {
 	if (state == 3)
-	{
 		state = 0;
-	}
 
 	if (touch == 0)
-	{
 		ev_post_message(key, state);
-	}
 	else
 	{
 		printf("Touch %i - %i (%i)\n", x, y, state);
@@ -194,9 +184,7 @@ void ev_input_callback(byte touch, int key, byte state, int x, int y)
 void ev_input_callback_(struct input_event* ev)
 {
 	if (ev->type == EV_KEY)
-	{
 		ev_post_message(ev->code, ev->value);
-	}
 	else if (ev->type == EV_ABS)
 	{
 		evtouch_x = ev->value >> 16;
@@ -205,17 +193,11 @@ void ev_input_callback_(struct input_event* ev)
 		if ((evtouch_x != 0) && (evtouch_y != 0))
 		{
 			if (ev->code == 0)
-			{
 				evtouch_state = 0;
-			}
 			else if (evtouch_state == 0)
-			{
 				evtouch_state = 1;
-			}
 			else
-			{
 				evtouch_state = 2;
-			}
 
 			ev_post_message(evtouch_code, evtouch_state);
 		}
@@ -240,9 +222,7 @@ static void* ev_input_thread(void* cookie)
 		byte         ret = aipGetInput(&e);
 
 		if (e.state == 3)
-		{
 			e.state = 0;
-		}
 
 		if (ret == AINPUT_EV_RET_TOUCH)
 		{
@@ -260,9 +240,7 @@ static void* ev_input_thread(void* cookie)
 						ev_post_message(evtouch_code, evtouch_state);
 					}
 					else
-					{
 						touch_move_sent = 2;
-					}
 				}
 				else
 				{
@@ -281,9 +259,7 @@ static void* ev_input_thread(void* cookie)
 			}
 		}
 		else if (e.type == AINPUT_EV_TYPE_KEY)
-		{
 			ev_post_message(e.key, e.state);
-		}
 	}
 
 	return NULL;
@@ -341,9 +317,7 @@ void ui_clear_key_queue()
 	pthread_mutex_unlock(&key_queue_mutex);
 
 	if (atouch_winmsg_n > 0)
-	{
 		ev_post_message(atouch_message_code, 0);
-	}
 }
 
 //-- Wait For Key
@@ -414,41 +388,27 @@ int atouch_wait_ex(ATEV* atev, byte calibratingtouch)
 				switch (evtouch_state)
 				{
 					case 1: return ATEV_MOUSEDN; break;
-
 					case 2: return ATEV_MOUSEMV; break;
-
 					default: return ATEV_MOUSEUP; break;
 				}
 			}
 		}
 		else if ((key != 0) && (key == acfg()->ckey_up))
-		{
 			return ATEV_UP;
-		}
 		else if ((key != 0) && (key == acfg()->ckey_down))
-		{
 			return ATEV_DOWN;
-		}
 		else if ((key != 0) && (key == acfg()->ckey_select))
-		{
 			return ATEV_SELECT;
-		}
 		else if ((key != 0) && (key == acfg()->ckey_back))
-		{
 			return ATEV_BACK;
-		}
 		else if ((key != 0) && (key == acfg()->ckey_menu))
-		{
 			return ATEV_MENU;
-		}
 		else
 		{
 			if (key == KEY_VOLUMEDOWN)
 			{
 				if (volume_down_pressed != 2)
-				{
 					volume_down_pressed = atev->d;
-				}
 			}
 
 			/* DEFINED KEYS */
@@ -470,13 +430,9 @@ int atouch_wait_ex(ATEV* atev, byte calibratingtouch)
 				case KEY_VOLUMEDOWN:
 				{
 					if (volume_down_pressed != 2)
-					{
 						return ATEV_DOWN;
-					}
 					else if (atev->d == 0)
-					{
 						volume_down_pressed = 0;
-					}
 				}
 				break;
 
@@ -514,9 +470,7 @@ int atouch_wait_ex(ATEV* atev, byte calibratingtouch)
 						}
 					}
 					else
-					{
 						return ATEV_SELECT;
-					}
 				}
 				break;
 

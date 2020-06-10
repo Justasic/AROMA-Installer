@@ -90,9 +90,7 @@ void accheck_ondestroy(void *x)
 		int i;
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			free(d->items[i]);
-		}
 
 		free(d->items);
 		ag_ccanvas(&d->client);
@@ -106,9 +104,7 @@ int accheck_itemcount(ACONTROLP ctl)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return -1;
-	}
 
 	return d->itemn;
 }
@@ -118,14 +114,10 @@ byte accheck_ischecked(ACONTROLP ctl, int index)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return 0;
-	}
 
 	if (index < d->itemn)
-	{
 		return d->items[index]->checked;
-	}
 
 	return 0;
 }
@@ -135,9 +127,7 @@ byte accheck_isgroup(ACONTROLP ctl, int index)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return 0;
-	}
 
 	return d->items[index]->isTitle;
 }
@@ -147,9 +137,7 @@ int accheck_getgroup(ACONTROLP ctl, int index)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return 0;
-	}
 
 	return d->items[index]->group;
 }
@@ -159,9 +147,7 @@ int accheck_getgroupid(ACONTROLP ctl, int index)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return 0;
-	}
 
 	return d->items[index]->groupid;
 }
@@ -171,14 +157,10 @@ void accheck_redrawitem(ACONTROLP ctl, int index)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return; //-- Not Valid Signature
-	}
 
 	if ((index >= d->itemn) || (index < 0))
-	{
 		return; //-- Not Valid Index
-	}
 
 	ACCHECKIP p = d->items[index];
 	CANVAS *  c = &d->client;
@@ -252,32 +234,20 @@ void accheck_redrawitem(ACONTROLP ctl, int index)
 		if (p->checked)
 		{
 			if (index == d->touchedItem)
-			{
 				drawed = atheme_draw("img.checkbox.on.push", c, chkbox_x - minpad, chkbox_y - minpad, chkbox_s + addpad, chkbox_s + addpad);
-			}
 			else if ((index == d->focusedItem) && (d->focused))
-			{
 				drawed = atheme_draw("img.checkbox.on.focus", c, chkbox_x - minpad, chkbox_y - minpad, chkbox_s + addpad, chkbox_s + addpad);
-			}
 			else
-			{
 				drawed = atheme_draw("img.checkbox.on", c, chkbox_x - minpad, chkbox_y - minpad, chkbox_s + addpad, chkbox_s + addpad);
-			}
 		}
 		else
 		{
 			if (index == d->touchedItem)
-			{
 				drawed = atheme_draw("img.checkbox.push", c, chkbox_x - minpad, chkbox_y - minpad, chkbox_s + addpad, chkbox_s + addpad);
-			}
 			else if ((index == d->focusedItem) && (d->focused))
-			{
 				drawed = atheme_draw("img.checkbox.focus", c, chkbox_x - minpad, chkbox_y - minpad, chkbox_s + addpad, chkbox_s + addpad);
-			}
 			else
-			{
 				drawed = atheme_draw("img.checkbox", c, chkbox_x - minpad, chkbox_y - minpad, chkbox_s + addpad, chkbox_s + addpad);
-			}
 		}
 
 		if (!drawed)
@@ -299,9 +269,7 @@ void accheck_redraw(ACONTROLP ctl)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return; //-- Not Valid Signature
-	}
 
 	if ((d->itemn > 0) && (d->draweditemn < d->itemn))
 	{
@@ -313,17 +281,13 @@ void accheck_redraw(ACONTROLP ctl)
 		d->maxScrollY = d->nextY - (ctl->h - (agdp() * max(acfg()->roundsz, 4)));
 
 		if (d->maxScrollY < 0)
-		{
 			d->maxScrollY = 0;
-		}
 
 		//-- Draw Items
 		int i;
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			accheck_redrawitem(ctl, i);
-		}
 
 		d->draweditemn = d->itemn;
 	}
@@ -335,9 +299,7 @@ byte accheck_add(ACONTROLP ctl, char *title, char *desc, byte checked)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return 0; //-- Not Valid Signature
-	}
 
 	//-- Allocating Memory For Item Data
 	ACCHECKIP newip = (ACCHECKIP)malloc(sizeof(ACCHECKI));
@@ -350,9 +312,7 @@ byte accheck_add(ACONTROLP ctl, char *title, char *desc, byte checked)
 	newip->h  = (agdp() * 10) + newip->dh + newip->th;
 
 	if (newip->h < (agdp() * 22))
-	{
 		newip->h = (agdp() * 22);
-	}
 
 	newip->checked = checked;
 	newip->id      = d->itemn;
@@ -369,9 +329,7 @@ byte accheck_add(ACONTROLP ctl, char *title, char *desc, byte checked)
 		d->items           = malloc(sizeof(ACCHECKIP) * (d->itemn + 1));
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			d->items[i] = tmpitms[i];
-		}
 
 		d->items[d->itemn] = newip;
 		free(tmpitms);
@@ -392,14 +350,10 @@ byte accheck_addgroup(ACONTROLP ctl, char *title, char *desc)
 	ACCHECKDP d = (ACCHECKDP)ctl->d;
 
 	if (d->acheck_signature != 133)
-	{
 		return 0; //-- Not Valid Signature
-	}
 
 	if (d->groupCounts + 1 >= ACCHK_MAX_GROUP)
-	{
 		return 0;
-	}
 
 	//-- Allocating Memory For Item Data
 	ACCHECKIP newip = (ACCHECKIP)malloc(sizeof(ACCHECKI));
@@ -425,9 +379,7 @@ byte accheck_addgroup(ACONTROLP ctl, char *title, char *desc)
 		d->items           = malloc(sizeof(ACCHECKIP) * (d->itemn + 1));
 
 		for (i = 0; i < d->itemn; i++)
-		{
 			d->items[i] = tmpitms[i];
-		}
 
 		d->items[d->itemn] = newip;
 		free(tmpitms);
@@ -482,23 +434,17 @@ void accheck_ondraw(void *x)
 		int  add_t_y = 1;
 
 		if (d->focused)
-		{
 			add_t_y = agdp();
-		}
 
 		for (i = 0; i < agdpX; i++)
 		{
 			byte alph = 255 - round((((float)(i + 1)) / ((float)agdpX)) * 230);
 
 			if (isST)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ctl->y + i + add_t_y, ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 
 			if (isSB)
-			{
 				ag_rectopa(pc, ctl->x + agdp3, ((ctl->y + ctl->h) - (add_t_y)) - (i + 1), ctl->w - agdpX, 1, acfg()->textbg, alph);
-			}
 		}
 
 		if (d->maxScrollY > 0)
@@ -515,9 +461,7 @@ void accheck_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
@@ -527,16 +471,12 @@ void accheck_ondraw(void *x)
 				int alp    = (1.0 - (((float)abs(d->scrollY - d->maxScrollY)) / (((float)ctl->h) / 4))) * 255;
 
 				if (alp < 0)
-				{
 					alp = 0;
-				}
 
 				ag_rectopa(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar, alp);
 			}
 			else
-			{
 				ag_rect(pc, (ctl->w - agdp() * 3) + ctl->x, scrollbarY + ctl->y, agdp(), scrollbarH, acfg()->scrollbar);
-			}
 		}
 	}
 }
@@ -564,9 +504,8 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 					break;
 				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_MOUSEUP:
 		{
 			if ((d->prevTouchY != -50) && (abs(d->prevTouchY - atev->y) < agdp() * 5))
@@ -593,9 +532,7 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 						d->touchedItem = i;
 
 						if ((prevfocus != -1) && (prevfocus != i))
-						{
 							accheck_redrawitem(ctl, prevfocus);
-						}
 
 						accheck_redrawitem(ctl, i);
 						ctl->ondraw(ctl);
@@ -606,20 +543,14 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 				}
 
 				if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
 			else if (d->maxScrollY > 0)
 			{
 				if (akinetic_uphandler(&d->akin, atev->y))
-				{
 					ac_regfling(ctl, &d->akin, &d->scrollY, d->maxScrollY);
-				}
 				else if ((d->scrollY < 0) || (d->scrollY > d->maxScrollY))
-				{
 					ac_regbounce(ctl, &d->scrollY, d->maxScrollY);
-				}
 			}
 
 			if (d->touchedItem != -1)
@@ -631,9 +562,8 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 				ctl->ondraw(ctl);
 				msg = aw_msg(0, 1, 0, 0);
 			}
+			break;
 		}
-		break;
-
 		case ATEV_MOUSEMV:
 		{
 			byte allowscroll = 1;
@@ -656,9 +586,7 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 						}
 					}
 					else
-					{
 						allowscroll = 0;
-					}
 				}
 
 				if ((allowscroll) && (d->maxScrollY > 0))
@@ -678,28 +606,21 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 							d->scrollY += floor(mv * dumpsz);
 						}
 						else
-						{
 							d->scrollY += mv;
-						}
 
 						if (d->scrollY < 0 - (ctl->h / 4))
-						{
 							d->scrollY = 0 - (ctl->h / 8);
-						}
 
 						if (d->scrollY > d->maxScrollY + (ctl->h / 4))
-						{
 							d->scrollY = d->maxScrollY + (ctl->h / 8);
-						}
 
 						msg = aw_msg(0, 1, 0, 0);
 						ctl->ondraw(ctl);
 					}
 				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_SELECT:
 		{
 			if ((d->focusedItem > -1) && (d->draweditemn > 0))
@@ -735,9 +656,8 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 					msg = aw_msg(0, 1, 0, 0);
 				}
 			}
+			break;
 		}
-		break;
-
 		case ATEV_DOWN:
 		{
 			if ((d->focusedItem < d->itemn - 1) && (d->draweditemn > 0))
@@ -763,9 +683,8 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 				int reqY = d->items[d->focusedItem]->y - round((ctl->h / 2) - (d->items[d->focusedItem]->h / 2));
 				ac_regscrollto(ctl, &d->scrollY, d->maxScrollY, reqY, &d->focusedItem, d->focusedItem);
 			}
+			break;
 		}
-		break;
-
 		case ATEV_UP:
 		{
 			if ((d->focusedItem > 0) && (d->draweditemn > 0))
@@ -791,8 +710,8 @@ dword accheck_oninput(void *x, int action, ATEV *atev)
 				int reqY = d->items[d->focusedItem]->y - round((ctl->h / 2) - (d->items[d->focusedItem]->h / 2));
 				ac_regscrollto(ctl, &d->scrollY, d->maxScrollY, reqY, &d->focusedItem, d->focusedItem);
 			}
+			break;
 		}
-		break;
 	}
 
 	return msg;
@@ -805,14 +724,10 @@ byte accheck_onfocus(void *x)
 	d->focused    = 1;
 
 	if ((d->focusedItem == -1) && (d->itemn > 0))
-	{
 		d->focusedItem = 0;
-	}
 
 	if ((d->focusedItem != -1) && (d->draweditemn > 0))
-	{
 		accheck_redrawitem(ctl, d->focusedItem);
-	}
 
 	ctl->ondraw(ctl);
 	return 1;
@@ -825,9 +740,7 @@ void accheck_onblur(void *x)
 	d->focused    = 0;
 
 	if ((d->focusedItem != -1) && (d->draweditemn > 0))
-	{
 		accheck_redrawitem(ctl, d->focusedItem);
-	}
 
 	ctl->ondraw(ctl);
 }
@@ -836,14 +749,10 @@ ACONTROLP accheck(AWINDOWP win, int x, int y, int w, int h)
 {
 	//-- Validate Minimum Size
 	if (h < agdp() * 16)
-	{
 		h = agdp() * 16;
-	}
 
 	if (w < agdp() * 20)
-	{
 		w = agdp() * 20;
-	}
 
 	//-- Initializing Text Data
 	ACCHECKDP d = (ACCHECKDP)malloc(sizeof(ACCHECKD));

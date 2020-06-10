@@ -103,6 +103,7 @@ static const byte dither_tresshold_b[64]={
 };
 */
 static int colorspace_positions[4] = {0, 0, 0, 0};
+
 int *ag_getcolorspace()
 {
 	return colorspace_positions;
@@ -191,17 +192,11 @@ color ag_calculatecontrast(color c, float intensity)
 color ag_calculatealpha(color dcl, color scl, byte l)
 {
 	if (scl == dcl)
-	{
 		return scl;
-	}
 	else if (l == 0)
-	{
 		return dcl;
-	}
 	else if (l == 255)
-	{
 		return scl;
-	}
 
 	color na = l + (l >> 7);
 	color fa = 256 - na;
@@ -232,17 +227,11 @@ color ag_calculatealpha(color dcl, color scl, byte l) {
 dword ag_calculatealpha32(dword dcl, dword scl, byte l)
 {
 	if (scl == dcl)
-	{
 		return scl;
-	}
 	else if (l == 0)
-	{
 		return dcl;
-	}
 	else if (l == 255)
-	{
 		return scl;
-	}
 
 	byte ralpha = 255 - l;
 	byte r      = (byte)(((((int)ag_r32(dcl)) * ralpha) + (((int)ag_r32(scl)) * l)) >> 8);
@@ -254,17 +243,11 @@ dword ag_calculatealpha32(dword dcl, dword scl, byte l)
 dword ag_calculatealphaTo32(color dcl, color scl, byte l)
 {
 	if (scl == dcl)
-	{
 		return ag_rgbto32(scl);
-	}
 	else if (l == 0)
-	{
 		return ag_rgbto32(dcl);
-	}
 	else if (l == 255)
-	{
 		return ag_rgbto32(scl);
-	}
 
 	byte ralpha = 255 - l;
 	byte r      = (byte)(((((int)ag_r(dcl)) * ralpha) + (((int)ag_r(scl)) * l)) >> 8);
@@ -276,17 +259,11 @@ dword ag_calculatealphaTo32(color dcl, color scl, byte l)
 dword ag_calculatealpha16to32(color dcl, dword scl, byte l)
 {
 	if (scl == ag_rgbto32(dcl))
-	{
 		return scl;
-	}
 	else if (l == 0)
-	{
 		return ag_rgbto32(dcl);
-	}
 	else if (l == 255)
-	{
 		return scl;
-	}
 
 	byte ralpha = 255 - l;
 	byte r      = (byte)(((((int)ag_r(dcl)) * ralpha) + (((int)ag_r32(scl)) * l)) >> 8);
@@ -300,9 +277,7 @@ dword ag_calculatealpha16to32(color dcl, dword scl, byte l)
 byte ag_init()
 {
 	if (ag_fb > 0)
-	{
 		return 0;
-	}
 
 	//-- Open Framebuffer
 	ag_fb = open(AROMA_FRAMEBUFFER, O_RDWR, 0);
@@ -339,9 +314,7 @@ byte ag_init()
 					ag_16w             = ag_fbv.xres;
 				}
 				else
-				{
 					ag_16strd = 1;
-				}
 			}
 
 			if (ag_16strd == 0)
@@ -447,13 +420,9 @@ void ag_close_thread()
 color aAlphaB(color scl, byte l)
 {
 	if (l == 0)
-	{
 		return 0;
-	}
 	else if (l == 255)
-	{
 		return scl;
-	}
 
 	word na = l + (l >> 7);
 	/* Calculate Alpha per channel */
@@ -463,34 +432,22 @@ color aAlphaB(color scl, byte l)
 byte ag_draw_strecth(CANVAS *d, CANVAS *s, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh)
 {
 	if (d == NULL)
-	{
 		d = agc();
-	}
 
 	if (s == NULL)
-	{
 		return 0;
-	}
 
 	if ((dh < 1) || (dw < 1) || (sh < 1) || (sw < 1))
-	{
 		return 0;
-	}
 
 	if ((sx >= s->w) || (sy >= s->h))
-	{
 		return 0;
-	}
 
 	if (sx + sw > s->w)
-	{
 		sw = s->w - sx;
-	}
 
 	if (sy + sh > s->h)
-	{
 		sw = s->h - sy;
-	}
 
 	int x_ratio = (int)((sw << 16) / dw) + 1;
 	int y_ratio = (int)((sh << 16) / dh) + 1;
@@ -518,34 +475,22 @@ byte ag_draw_strecth(CANVAS *d, CANVAS *s, int dx, int dy, int dw, int dh, int s
 byte ag_draw_strecth_ex(CANVAS *d, CANVAS *s, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh, byte alpha, byte withdest)
 {
 	if (d == NULL)
-	{
 		d = agc();
-	}
 
 	if (s == NULL)
-	{
 		return 0;
-	}
 
 	if ((dh < 1) || (dw < 1) || (sh < 1) || (sw < 1))
-	{
 		return 0;
-	}
 
 	if ((sx >= s->w) || (sy >= s->h))
-	{
 		return 0;
-	}
 
 	if (sx + sw > s->w)
-	{
 		sw = s->w - sx;
-	}
 
 	if (sy + sh > s->h)
-	{
 		sw = s->h - sy;
-	}
 
 	int x_ratio = (int)((sw << 16) / dw) + 1;
 	int y_ratio = (int)((sh << 16) / dh) + 1;
@@ -586,14 +531,10 @@ byte ag_draw_strecth_ex(CANVAS *d, CANVAS *s, int dx, int dy, int dw, int dh, in
 byte ag_draw_opa(CANVAS *d, CANVAS *s, int dx, int dy, byte alpha, byte withdest)
 {
 	if (s == NULL)
-	{
 		return 0;
-	}
 
 	if (d == NULL)
-	{
 		d = &ag_c;
-	}
 
 	dx     = 0 - dx;
 	dy     = 0 - dy;
@@ -625,9 +566,7 @@ byte ag_draw_opa(CANVAS *d, CANVAS *s, int dx, int dy, byte alpha, byte withdest
 		else
 		{
 			for (x = 0; x < sw; x++)
-			{
 				*t++ = aAlphaB(*p++, alpha);
-			}
 		}
 	}
 
@@ -693,36 +632,24 @@ void ag_close()
 	if (ag_fbv.bits_per_pixel != 16)
 	{
 		if (ag_bf32 != NULL)
-		{
 			free(ag_bf32);
-		}
 
 		if (ag_bz32 != NULL)
-		{
 			free(ag_bz32);
-		}
 
 		if (ag_fbuf32 != NULL)
-		{
 			munmap(ag_fbuf32, ag_fbsz);
-		}
 	}
 	else if (ag_fbv.bits_per_pixel == 16)
 	{
 		if (ag_b != NULL)
-		{
 			free(ag_b);
-		}
 
 		if (ag_bz != NULL)
-		{
 			free(ag_bz);
-		}
 
 		if (ag_fbuf != NULL)
-		{
 			munmap(ag_fbuf, ag_fbsz);
-		}
 	}
 
 	//-- Cleanup Canvas & FrameBuffer
@@ -775,9 +702,7 @@ void ag_copybusy(char *wait)
 	ag_rectopa(&tmpc, 0, 0, agw(), agh(), 0x0000, 180);
 
 	while (!(ag_fontready(0)))
-	{
 		usleep(50);
-	}
 
 	ag_oncopybusy = 1;
 	// char * wait = "Please Wait...";
@@ -797,13 +722,9 @@ void ag_copybusy(char *wait)
 		int alp;
 
 		if (i < winH2)
-		{
 			alp = ((i * 255) / winH2);
-		}
 		else
-		{
 			alp = (((winH - i) * 255) / winH2);
-		}
 
 		alp = min(alp, 255);
 		ag_rectopa(&tmpc, 0, winY + i, agw(), 1, 0x0000, alp);
@@ -834,9 +755,7 @@ void ag_copybusy(char *wait)
 		}
 	}
 	else
-	{
 		memcpy(ag_bz, tmpc.data, ag_fbsz);
-	}
 
 	ag_ccanvas(&tmpc);
 }
@@ -859,16 +778,12 @@ void ag_setbusy_withtext(char *text)
 void ag_busyprogress()
 {
 	if (!ag_isbusy)
-	{
 		return;
-	}
 
 	ag_busypos--; //=agdp();
 
 	if (ag_busypos < 0)
-	{
 		ag_busypos = ag_busywinW;
-	}
 
 	int bs_x  = (agw() / 2) - (ag_busywinW / 2);
 	int bs_y  = (agh() / 2) + ag_fontheight(0) - (agdp() * 2);
@@ -887,13 +802,9 @@ void ag_busyprogress()
 				int alp;
 
 				if (i < bs_w2)
-				{
 					alp = ((i * 255) / bs_w2);
-				}
 				else
-				{
 					alp = (((bs_w - i) * 255) / bs_w2);
-				}
 
 				alp = min(alp, 255);
 
@@ -917,13 +828,9 @@ void ag_busyprogress()
 				int alp;
 
 				if (i < bs_w2)
-				{
 					alp = ((i * 255) / bs_w2);
-				}
 				else
-				{
 					alp = (((bs_w - i) * 255) / bs_w2);
-				}
 
 				alp = min(alp, 255);
 
@@ -938,9 +845,7 @@ void ag_busyprogress()
 	}
 
 	if (!ag_isbusy)
-	{
 		ag_sync();
-	}
 }
 
 #ifdef __ARM_NEON__
@@ -1107,9 +1012,7 @@ void ag_refreshrate()
 				// ag16fbufcopy(ag_b);
 			}
 			else
-			{
 				ag16fbufcopy(ag_b);
-			}
 
 			ag_drawcaret();
 		}
@@ -1122,9 +1025,7 @@ void ag_refreshrate()
 				// ag16fbufcopy(ag_bz);
 			}
 			else
-			{
 				ag16fbufcopy(ag_bz);
-			}
 
 			ag_busyprogress();
 		}
@@ -1183,9 +1084,7 @@ void ag_sync()
 #endif
 		}
 		else
-		{
 			memcpy(ag_b, ag_c.data, ag_fbsz);
-		}
 
 		ag_refreshrate();
 		ag_refreshlock = 0;
@@ -1195,13 +1094,9 @@ void ag_sync()
 void ag_sync_force()
 {
 	if (ag_sync_locked)
-	{
 		ag_sync_locked = 0;
-	}
 	else
-	{
 		ag_sync();
-	}
 }
 
 static void *ag_sync_fade_thread(void *cookie)
@@ -1304,19 +1199,13 @@ void ag_sync_fade(int frame)
 byte ag_blur_h(CANVAS *d, CANVAS *s, int radius)
 {
 	if (radius < 1)
-	{
 		return 0;
-	}
 
 	if (s == NULL)
-	{
 		return 0;
-	}
 
 	if (d == NULL)
-	{
 		d = &ag_c;
-	}
 
 	int x, y, k;
 	int rad  = radius * 2;
@@ -1392,19 +1281,13 @@ byte ag_blur_h(CANVAS *d, CANVAS *s, int radius)
 byte ag_blur_v(CANVAS *d, CANVAS *s, int radius)
 {
 	if (radius < 1)
-	{
 		return 0;
-	}
 
 	if (s == NULL)
-	{
 		return 0;
-	}
 
 	if (d == NULL)
-	{
 		d = &ag_c;
-	}
 
 	int x, y, k;
 	int rad  = radius * 2;
@@ -1480,9 +1363,7 @@ byte ag_blur_v(CANVAS *d, CANVAS *s, int radius)
 byte ag_blur(CANVAS *d, CANVAS *s, int radius)
 {
 	if (radius < 1)
-	{
 		return 0;
-	}
 
 	CANVAS tmp;
 	ag_canvas(&tmp, s->w, s->h);
@@ -1506,9 +1387,7 @@ void ag_canvas(CANVAS *c, int w, int h)
 void ag_ccanvas(CANVAS *c)
 {
 	if (c->data)
-	{
 		free(c->data);
-	}
 
 	c->data = NULL;
 }
@@ -1523,9 +1402,7 @@ CANVAS *agc()
 void ag_blank(CANVAS *c)
 {
 	if (c == NULL)
-	{
 		c = &ag_c;
-	}
 
 	memset(c->data, 0, c->sz);
 }
@@ -1556,9 +1433,7 @@ void set_agdp(int dp)
 color strtocolor(char *c)
 {
 	if (c[0] != '#')
-	{
 		return 0;
-	}
 
 	char out[9] = {'0', 'x'};
 	int  i;
@@ -1566,9 +1441,7 @@ color strtocolor(char *c)
 	if (strlen(c) == 7)
 	{
 		for (i = 1; i < 7; i++)
-		{
 			out[i + 1] = c[i];
-		}
 	}
 	else if (strlen(c) == 4)
 	{
@@ -1579,9 +1452,7 @@ color strtocolor(char *c)
 		}
 	}
 	else
-	{
 		return 0;
-	}
 
 	out[8]   = 0;
 	dword ul = strtoul(out, NULL, 0);
@@ -1592,24 +1463,16 @@ color strtocolor(char *c)
 byte ag_draw_ex(CANVAS *dc, CANVAS *sc, int dx, int dy, int sx, int sy, int sw, int sh)
 {
 	if (sc == NULL)
-	{
 		return 0;
-	}
 
 	if (dc == NULL)
-	{
 		dc = &ag_c;
-	}
 
 	if (dx >= dc->w)
-	{
 		return 0;
-	}
 
 	if (dy >= dc->h)
-	{
 		return 0;
-	}
 
 	if (sx < 0)
 	{
@@ -1626,19 +1489,13 @@ byte ag_draw_ex(CANVAS *dc, CANVAS *sc, int dx, int dy, int sx, int sy, int sw, 
 	}
 
 	if (sw + sx >= sc->w)
-	{
 		sw -= (sw + sx) - sc->w;
-	}
 
 	if (sh + sy >= sc->h)
-	{
 		sh -= (sh + sy) - sc->h;
-	}
 
 	if ((sw <= 0) || (sh <= 0))
-	{
 		return 0;
-	}
 
 	int sr_w = sw;
 	int sr_h = sh;
@@ -1664,14 +1521,10 @@ byte ag_draw_ex(CANVAS *dc, CANVAS *sc, int dx, int dy, int sx, int sy, int sw, 
 	}
 
 	if (sr_w + dx > dc->w)
-	{
 		sr_w -= (sr_w + dx) - dc->w;
-	}
 
 	if (sr_h + dy > dc->h)
-	{
 		sr_h -= (sr_h + dy) - dc->h;
-	}
 
 	int   y;
 	int   pos_sr_x = sr_x * 2;
@@ -1683,9 +1536,7 @@ byte ag_draw_ex(CANVAS *dc, CANVAS *sc, int dx, int dy, int sx, int sy, int sw, 
 	byte *dst      = ((byte *)dc->data);
 
 	for (y = 0; y < sr_h; y++)
-	{
 		memcpy(dst + ((ds_y + y) * pos_dc_w) + pos_ds_x, src + ((sr_y + y) * pos_sc_w) + pos_sr_x, copy_sz);
-	}
 
 	return 1;
 }
@@ -1694,9 +1545,7 @@ byte ag_draw_ex(CANVAS *dc, CANVAS *sc, int dx, int dy, int sx, int sy, int sw, 
 byte ag_draw(CANVAS *dc, CANVAS *sc, int dx, int dy)
 {
 	if (sc == NULL)
-	{
 		return 0;
-	}
 
 	return ag_draw_ex(dc, sc, dx, dy, 0, 0, sc->w, sc->h);
 }
@@ -1705,19 +1554,13 @@ byte ag_draw(CANVAS *dc, CANVAS *sc, int dx, int dy)
 color *agxy(CANVAS *_b, int x, int y)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	if ((x < 0) || (y < 0))
-	{
 		return NULL;
-	}
 
 	if ((x >= _b->w) || (y >= _b->h))
-	{
 		return NULL;
-	}
 
 	return _b->data + ((y * _b->w) + x);
 }
@@ -1728,9 +1571,7 @@ byte ag_setpixel(CANVAS *_b, int x, int y, color cl)
 	color *c = agxy(_b, x, y);
 
 	if (c == NULL)
-	{
 		return 0;
-	}
 
 	c[0] = cl;
 	return 1;
@@ -1739,9 +1580,7 @@ byte ag_setpixel(CANVAS *_b, int x, int y, color cl)
 byte ag_spixel(CANVAS *_b, float x, float y, color cl)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	int   fx = floor(x);
 	int   fy = floor(y);
@@ -1750,9 +1589,7 @@ byte ag_spixel(CANVAS *_b, float x, float y, color cl)
 	float sz = ax + ay;
 
 	if (sz == 0)
-	{
 		return ag_setpixel(_b, fx, fy, cl);
-	}
 
 	ag_subpixel(_b, fx, fy, cl, (byte)((((1 - ax) + (1 - ay)) * 255) / 4));
 	ag_subpixel(_b, fx + 1, fy, cl, (byte)(((ax + (1 - ay)) * 255) / 4));
@@ -1765,26 +1602,18 @@ byte ag_spixel(CANVAS *_b, float x, float y, color cl)
 byte ag_subpixel(CANVAS *_b, int x, int y, color cl, byte l)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	if (l >= 255)
-	{
 		return ag_setpixel(_b, x, y, cl);
-	}
 
 	if (l <= 0)
-	{
 		return 1;
-	}
 
 	color *c = agxy(_b, x, y);
 
 	if (c == NULL)
-	{
 		return 0;
-	}
 
 	c[0] = ag_calculatealpha(c[0], cl, l);
 	return 1;
@@ -1794,21 +1623,15 @@ byte ag_subpixel(CANVAS *_b, int x, int y, color cl, byte l)
 color ag_subpixelget(CANVAS *_b, int x, int y, color cl, byte l)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	if (l >= 255)
-	{
 		return cl;
-	}
 
 	color *c = agxy(_b, x, y);
 
 	if (c == NULL)
-	{
 		return 0;
-	}
 
 	return ag_calculatealpha(c[0], cl, l);
 }
@@ -1817,21 +1640,15 @@ color ag_subpixelget(CANVAS *_b, int x, int y, color cl, byte l)
 dword ag_subpixelget32(CANVAS *_b, int x, int y, dword cl, byte l)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	if (l >= 255)
-	{
 		return cl;
-	}
 
 	color *c = agxy(_b, x, y);
 
 	if (c == NULL)
-	{
 		return 0;
-	}
 
 	return ag_calculatealpha16to32(c[0], cl, l);
 }
@@ -1840,34 +1657,24 @@ dword ag_subpixelget32(CANVAS *_b, int x, int y, dword cl, byte l)
 byte ag_rect(CANVAS *_b, int x, int y, int w, int h, color cl)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	//-- FIXING
 	int x2 = x + w;
 
 	if (x2 > _b->w)
-	{
 		x2 = _b->w;
-	}
 
 	int y2 = y + h;
 
 	if (y2 > _b->h)
-	{
 		y2 = _b->h;
-	}
 
 	if (x < 0)
-	{
 		x = 0;
-	}
 
 	if (y < 0)
-	{
 		y = 0;
-	}
 
 	w = x2 - x;
 	h = y2 - y;
@@ -1879,9 +1686,7 @@ byte ag_rect(CANVAS *_b, int x, int y, int w, int h, color cl)
 		int i = yy * _b->w;
 
 		for (xx = x; xx < x2; xx++)
-		{
 			_b->data[i + xx] = cl;
-		}
 	}
 
 	return 1;
@@ -1891,34 +1696,24 @@ byte ag_rect(CANVAS *_b, int x, int y, int w, int h, color cl)
 byte ag_rectopa(CANVAS *_b, int x, int y, int w, int h, color cl, byte l)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	//-- FIXING
 	int x2 = x + w;
 
 	if (x2 > _b->w)
-	{
 		x2 = _b->w;
-	}
 
 	int y2 = y + h;
 
 	if (y2 > _b->h)
-	{
 		y2 = _b->h;
-	}
 
 	if (x < 0)
-	{
 		x = 0;
-	}
 
 	if (y < 0)
-	{
 		y = 0;
-	}
 
 	w       = x2 - x;
 	h       = y2 - y;
@@ -1975,9 +1770,7 @@ void ag_dither(byte *qe, int qp, int qx, int dthx, int dthy, int dthw, int dthh,
 	int  dthb    = (dtht + 2) % 3;
 
 	if (dthx < dthw - 1)
-	{
 		qe[qx + 3 + dthr] += errb[dthr];
-	}
 
 	if (dthy < dthh - 1)
 	{
@@ -1985,9 +1778,7 @@ void ag_dither(byte *qe, int qp, int qx, int dthx, int dthy, int dthw, int dthh,
 		qe[qx + dthg] += errb[dthg];
 
 		if (dthx > 0)
-		{
 			qe[qx - 3 + dthb] += errb[dthb];
-		}
 	}
 }
 
@@ -2000,49 +1791,33 @@ byte ag_roundgrad(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl2, 
 byte ag_roundgrad_ex(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl2, int roundsz, byte tlr, byte trr, byte blr, byte brr)
 {
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	if ((tlr == 2) || (trr == 2) || (blr == 2) || (brr == 2))
 	{
 		if (tlr == 2)
-		{
 			tlr = 1;
-		}
 
 		if (trr == 2)
-		{
 			trr = 1;
-		}
 
 		if (blr == 2)
-		{
 			blr = 1;
-		}
 
 		if (brr == 2)
-		{
 			brr = 1;
-		}
 	}
 	else
 	{
 		if (roundsz > h / 2)
-		{
 			roundsz = h / 2;
-		}
 
 		if (roundsz > w / 2)
-		{
 			roundsz = w / 2;
-		}
 	}
 
 	if (roundsz < 0)
-	{
 		roundsz = 0;
-	}
 
 	//-- ANTIALIAS ROUNDED
 	int   rndsz;
@@ -2057,9 +1832,7 @@ byte ag_roundgrad_ex(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl
 		float incz = 40 / roundsz;
 
 		if (roundsz > 40)
-		{
 			incz = 1;
-		}
 
 		while (inc <= 270)
 		{
@@ -2077,19 +1850,13 @@ byte ag_roundgrad_ex(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl
 				ag_rndsave(rndata[fx + fy * roundsz], 1 - ax, 1 - ay);
 
 				if (fx < roundsz - 1)
-				{
 					ag_rndsave(rndata[fx + 1 + fy * roundsz], ax, 1 - ay);
-				}
 
 				if (fy < roundsz - 1)
-				{
 					ag_rndsave(rndata[fx + (1 + fy) * roundsz], 1 - ax, ay);
-				}
 
 				if ((fx < roundsz - 1) && (fy < roundsz - 1))
-				{
 					ag_rndsave(rndata[(fx + 1) + (1 + fy) * roundsz], ax, ay);
-				}
 			}
 
 			inc += incz;
@@ -2107,9 +1874,7 @@ byte ag_roundgrad_ex(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl
 				byte alpx = rndata[rndx + rndy * roundsz];
 
 				if ((alpy < alpx) && (!alpf))
-				{
 					alpy = alpx;
-				}
 				else if (alpf || (alpy > alpx))
 				{
 					alpf                          = 1;
@@ -2209,9 +1974,7 @@ byte ag_roundgrad_ex(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl
 	}
 
 	if (roundsz > 0)
-	{
 		free(rndata);
-	}
 
 	free(qe);
 	return 1;
@@ -2223,16 +1986,12 @@ byte ag_roundgrad_ex(CANVAS *_b, int x, int y, int w, int h, color cl1, color cl
 byte ag_fontready(byte isbig)
 {
 	if (ag_font_onload)
-	{
 		return 0;
-	}
 
 	byte isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 
 	if (isfreetype)
-	{
 		return aft_fontready(isbig);
-	}
 
 	PNGFONTS *fnt = isbig ? &AG_BIG_FONT : &AG_SMALL_FONT;
 	return fnt->loaded;
@@ -2241,22 +2000,16 @@ byte ag_fontready(byte isbig)
 int ag_bulletwidth(byte isbig)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	float h = (float)ag_fontheight(isbig);
 	int   s = ceil(((float)h) / 2.5);
 
 	if (s % 2 != 0)
-	{
 		s--;
-	}
 
 	if (s == 0)
-	{
 		s = 2;
-	}
 
 	return s;
 }
@@ -2264,9 +2017,7 @@ int ag_bulletwidth(byte isbig)
 void ag_draw_bullet(CANVAS *_b, int x, int y, color cl, byte isbig, byte type)
 {
 	if (!ag_fontready(isbig))
-	{
 		return;
-	}
 
 	int h  = ag_fontheight(isbig);
 	int w  = ag_bulletwidth(isbig);
@@ -2279,9 +2030,7 @@ void ag_draw_bullet(CANVAS *_b, int x, int y, color cl, byte isbig, byte type)
 byte ag_loadsmallfont(char *fontname, byte is_freetype, char *relativeto)
 {
 	while (ag_oncopybusy)
-	{
 		usleep(50);
-	}
 
 	ag_font_onload = 1;
 	byte r         = 0;
@@ -2292,9 +2041,7 @@ byte ag_loadsmallfont(char *fontname, byte is_freetype, char *relativeto)
 		r                = aft_load(fontname, is_freetype + 1, 0, relativeto);
 
 		if (r)
-		{
 			AG_SMALL_FONT_FT = 1;
-		}
 	}
 	else
 	{
@@ -2302,9 +2049,7 @@ byte ag_loadsmallfont(char *fontname, byte is_freetype, char *relativeto)
 		r = apng_loadfont(&AG_SMALL_FONT, fontname);
 
 		if (r)
-		{
 			AG_SMALL_FONT_FT = 0;
-		}
 	}
 
 	ag_font_onload = 0;
@@ -2315,9 +2060,7 @@ byte ag_loadsmallfont(char *fontname, byte is_freetype, char *relativeto)
 byte ag_loadbigfont(char *fontname, byte is_freetype, char *relativeto)
 {
 	while (ag_oncopybusy)
-	{
 		usleep(50);
-	}
 
 	ag_font_onload = 1;
 	byte r         = 0;
@@ -2328,9 +2071,7 @@ byte ag_loadbigfont(char *fontname, byte is_freetype, char *relativeto)
 		r              = aft_load(fontname, is_freetype + 1, 1, relativeto);
 
 		if (r)
-		{
 			AG_BIG_FONT_FT = 1;
-		}
 	}
 	else
 	{
@@ -2338,9 +2079,7 @@ byte ag_loadbigfont(char *fontname, byte is_freetype, char *relativeto)
 		r = apng_loadfont(&AG_BIG_FONT, fontname);
 
 		if (r)
-		{
 			AG_BIG_FONT_FT = 0;
-		}
 	}
 
 	ag_font_onload = 0;
@@ -2351,17 +2090,13 @@ byte ag_loadbigfont(char *fontname, byte is_freetype, char *relativeto)
 byte ag_loadfixedfont(char *fontname, byte is_freetype, char *relativeto)
 {
 	while (ag_oncopybusy)
-	{
 		usleep(50);
-	}
 
 	ag_font_onload = 1;
 	byte r         = 0;
 
 	if (relativeto != NULL)
-	{
 		r = aft_load(fontname, is_freetype + 1, 2, relativeto);
-	}
 
 	ag_font_onload = 0;
 	return r;
@@ -2377,40 +2112,28 @@ void ag_closefonts()
 byte ag_drawchar_ex(CANVAS *_b, int x, int y, int c, color cl, byte isbig, byte underline, byte bold, byte italic)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	byte isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 
 	if (isfreetype)
-	{
 		return aft_drawfont(_b, isbig, c, x, y, cl, underline, bold, italic, 1);
-	}
 
 	int yy, xx;
 	y++;
 	int cd = ((int)c) - 32;
 
 	if (cd < 0)
-	{
 		return 0;
-	}
 
 	if (cd == 137)
-	{
 		cd = 95;
-	}
 
 	if (cd > 95)
-	{
 		return 0;
-	}
 
 	PNGFONTS *fnt = isbig ? &AG_BIG_FONT : &AG_SMALL_FONT;
 	return apng_drawfont(_b, fnt, cd, x, y, cl, underline, bold);
@@ -2425,34 +2148,24 @@ byte ag_drawchar(CANVAS *_b, int x, int y, int c, color cl, byte isbig)
 byte ag_fontwidth(int c, byte isbig)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	byte isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 
 	if (isfreetype)
-	{
 		return aft_fontwidth(c, isbig);
-	}
 
 	PNGFONTS *fnt = isbig ? &AG_BIG_FONT : &AG_SMALL_FONT;
 	int       cd  = ((int)c) - 32;
 
 	if (cd < 0)
-	{
 		return 0;
-	}
 
 	if (cd == 137)
-	{
 		cd = 95;
-	}
 
 	if (cd > 95)
-	{
 		return 0;
-	}
 
 	return fnt->fw[cd];
 }
@@ -2460,16 +2173,12 @@ byte ag_fontwidth(int c, byte isbig)
 int ag_fontwidth_kerning(int c, int p, byte isbig)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	byte isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 
 	if (isfreetype)
-	{
 		return aft_fontwidth(c, isbig) + aft_kern(c, p, isbig);
-	}
 
 	return ag_fontwidth(c, isbig);
 }
@@ -2482,9 +2191,7 @@ byte ag_isfreetype(byte isbig)
 int ag_tabwidth(int x, byte isbig)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	byte isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 
@@ -2497,9 +2204,7 @@ int ag_tabwidth(int x, byte isbig)
 	PNGFONTS *fnt = isbig ? &AG_BIG_FONT : &AG_SMALL_FONT;
 
 	if (!fnt->loaded)
-	{
 		return 0;
-	}
 
 	int spacesz = fnt->fw[0] * 8;
 	return (spacesz - (x % spacesz));
@@ -2554,9 +2259,7 @@ color ag_getcolorset(int color_index)
 byte ag_check_escape(int *soff, const char **ssource, char *buf, byte realescape, byte *o)
 {
 	if (*soff > 255)
-	{
 		return 0;
-	}
 
 	const char *s   = *ssource;
 	char        off = (char)*soff;
@@ -2569,9 +2272,7 @@ byte ag_check_escape(int *soff, const char **ssource, char *buf, byte realescape
 		*ssource = s;
 
 		if (o != NULL)
-		{
 			*o = 1;
-		}
 	}
 	else if ((off == '<') && ((*s == 'u') || (*s == 'i') || (*s == 'b') || (*s == 'q') || (*s == '*') || (*s == '@') || (*s == '#') || (*s == '/')))
 	{
@@ -2606,9 +2307,7 @@ byte ag_check_escape(int *soff, const char **ssource, char *buf, byte realescape
 						if (buf != NULL)
 						{
 							if (realescape)
-							{
 								snprintf(buf, 15, "%s", tb);
-							}
 							else
 							{
 								color ccolor = ag_getcolorset(ci);
@@ -2630,9 +2329,7 @@ byte ag_check_escape(int *soff, const char **ssource, char *buf, byte realescape
 			    || ((tb[0] == '#') && ((strlen(tb) == 4) || (strlen(tb) == 7))))
 			{
 				if (buf != NULL)
-				{
 					sprintf(buf, "%s", tb);
-				}
 
 				*ssource = sv;
 				return 1;
@@ -2647,9 +2344,7 @@ byte ag_check_escape(int *soff, const char **ssource, char *buf, byte realescape
 int ag_txtwidth(const char *ss, byte isbig)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	int         w = 0;
 	int         x = 0;
@@ -2665,22 +2360,16 @@ int ag_txtwidth(const char *ss, byte isbig)
 	while ((off = utf8c(s, &s, &move)))
 	{
 		if ((move == 1) && (ag_check_escape(&off, &s, NULL, 1, NULL)))
-		{
 			continue;
-		}
 
 		int is_arabic = 0;
 
 		if (!is_arabic)
 		{
 			if (off == '\t')
-			{
 				w += ag_tabwidth(w, isbig);
-			}
 			else
-			{
 				w += ag_fontwidth_kerning(off, p, isbig);
-			}
 		}
 
 		p = off;
@@ -2693,16 +2382,12 @@ int ag_txtwidth(const char *ss, byte isbig)
 int ag_fontheight(byte isbig)
 {
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	byte isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 
 	if (isfreetype)
-	{
 		return aft_fontheight(isbig);
-	}
 
 	PNGFONTS *fnt = isbig ? &AG_BIG_FONT : &AG_SMALL_FONT;
 	return fnt->fh;
@@ -2738,19 +2423,13 @@ byte ag_textfs(CANVAS *_b, int maxwidth, int x, int y, const char *s, color cl_d
 int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangealign, int *indent, int *next_indent, byte *endofstring)
 {
 	if (maxwidth_ori == 0)
-	{
 		return 0;
-	}
 
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	if (maxwidth_ori < ag_fontheight(isbig) * 2)
-	{
 		maxwidth_ori = ag_fontheight(isbig) * 2;
-	}
 
 	char tb[15];          //-- Escape Data
 	int  c          = 0;  //-- Current Char
@@ -2776,14 +2455,10 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 				    || (strcmp(tb, "@fill") == 0))
 				{
 					if (ischangealign != NULL)
-					{
 						ischangealign[0] = 1;
-					}
 
 					if (*s == '\n')
-					{
 						return (l + 3 + strlen(tb));
-					}
 
 					return l;
 				}
@@ -2792,21 +2467,15 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 					next_indent[0] = indent[0] - indentsz;
 
 					if (next_indent[0] < 0)
-					{
 						next_indent[0] = 0;
-					}
 
 					if (fns)
 					{
 						if (ischangealign != NULL)
-						{
 							ischangealign[0] = 1;
-						}
 
 						if (*s == '\n')
-						{
 							return (l + 3 + strlen(tb));
-						}
 
 						return l;
 					}
@@ -2821,21 +2490,15 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 					next_indent[0] = indent[0] + indentsz;
 
 					if (next_indent[0] > indentsz * 5)
-					{
 						next_indent[0] = indentsz * 5;
-					}
 
 					if (fns)
 					{
 						if (ischangealign != NULL)
-						{
 							ischangealign[0] = 1;
-						}
 
 						if (*s == '\n')
-						{
 							return (l + 3 + strlen(tb));
-						}
 
 						return l;
 					}
@@ -2852,9 +2515,7 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 				indent[0] -= indentsz;
 
 				if (indent[0] < 0)
-				{
 					indent[0] = 0;
-				}
 
 				next_indent[0] = indent[0];
 				maxwidth       = maxwidth_ori - indent[0];
@@ -2865,9 +2526,7 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 				indent[0] += indentsz;
 
 				if (indent[0] > indentsz * 5)
-				{
 					indent[0] = indentsz * 5;
-				}
 
 				next_indent[0] = indent[0];
 				maxwidth       = maxwidth_ori - indent[0];
@@ -2885,20 +2544,14 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 				if (c == '\n')
 				{
 					if (ischangealign != NULL)
-					{
 						ischangealign[0] = 1;
-					}
 
 					return l + move;
 				}
 				else if (c == '\t')
-				{
 					w += ag_tabwidth(w, isbig);
-				}
 				else
-				{
 					w += ag_fontwidth_kerning(c, pc, isbig);
-				}
 
 				// w+=ag_fontwidth(c,isbig);
 			}
@@ -2906,9 +2559,7 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 			if (w > maxwidth)
 			{
 				if (p == -1)
-				{
 					return l;
-				}
 
 				return p;
 			}
@@ -2922,9 +2573,7 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 				l += move;
 
 				if (o)
-				{
 					l++;
-				}
 
 				fns = 1;
 			}
@@ -2947,9 +2596,7 @@ int ag_txt_getline(const char *s, int maxwidth_ori, byte isbig, byte *ischangeal
 char *ag_substring(const char *s, int len)
 {
 	if (len < 1)
-	{
 		return NULL;
-	}
 
 	char *ln = malloc(len + 1);
 	memset(ln, 0, len + 1);
@@ -2972,26 +2619,18 @@ char *ag_substring(const char *s, int len)
 int ag_txtheight(int maxwidth, const char *ss, byte isbig)
 {
 	if (maxwidth == 0)
-	{
 		return 0;
-	}
 
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	int fheight = ag_fontheight(isbig);
 
 	if (fheight == 0)
-	{
 		return 0;
-	}
 
 	if (maxwidth < fheight * 2)
-	{
 		maxwidth = fheight * 2;
-	}
 
 	char *      sams   = alang_ams(ss);
 	const char *s      = sams;
@@ -3005,18 +2644,14 @@ int ag_txtheight(int maxwidth, const char *ss, byte isbig)
 		int  line_width  = ag_txt_getline(s, maxwidth, isbig, NULL, &indent, &next_indent, &eos);
 
 		if (line_width == 0)
-		{
 			break;
-		}
 
 		lines++;
 		s += line_width;
 		indent = next_indent;
 
 		if (eos)
-		{
 			break;
-		}
 	}
 
 	free(sams);
@@ -3026,33 +2661,23 @@ int ag_txtheight(int maxwidth, const char *ss, byte isbig)
 void ag_txtxy(int *x, int *y, int maxwidth, const char *ss, byte isbig, int haltat)
 {
 	if (maxwidth == 0)
-	{
 		return;
-	}
 
 	if (!ag_fontready(isbig))
-	{
 		return;
-	}
 
 	int fheight = ag_fontheight(isbig);
 
 	if (fheight == 0)
-	{
 		return;
-	}
 
 	if (maxwidth < fheight * 2)
-	{
 		maxwidth = fheight * 2;
-	}
 
 	char *sams = alang_ams(ss);
 
 	if (haltat == -1)
-	{
 		haltat = strlen(sams);
-	}
 
 	const char *s      = sams;
 	int         indent = 0;
@@ -3068,9 +2693,7 @@ void ag_txtxy(int *x, int *y, int maxwidth, const char *ss, byte isbig, int halt
 		int  line_width  = ag_txt_getline(s, maxwidth, isbig, NULL, &indent, &next_indent, &eos);
 
 		if (line_width == 0)
-		{
 			break;
-		}
 
 		charp -= line_width;
 
@@ -3094,17 +2717,13 @@ void ag_txtxy(int *x, int *y, int maxwidth, const char *ss, byte isbig, int halt
 		indent = next_indent;
 
 		if (eos)
-		{
 			break;
-		}
 	}
 
 	free(sams);
 
 	if (lines > 0)
-	{
 		lines--;
-	}
 
 	*y = (lines * fheight);
 }
@@ -3113,36 +2732,24 @@ void ag_txtxy(int *x, int *y, int maxwidth, const char *ss, byte isbig, int halt
 byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color cl_def, byte isbig, byte forcecolor, byte multiline)
 {
 	if (maxwidth == 0)
-	{
 		return 0;
-	}
 
 	if (!ag_fontready(isbig))
-	{
 		return 0;
-	}
 
 	if (_b == NULL)
-	{
 		_b = &ag_c;
-	}
 
 	if (!maxwidth)
-	{
 		maxwidth = _b->w - x;
-	}
 
 	int fheight = ag_fontheight(isbig);
 
 	if (fheight == 0)
-	{
 		return 0;
-	}
 
 	if (maxwidth < fheight * 2)
-	{
 		maxwidth = fheight * 2;
-	}
 
 	byte        isfreetype = isbig ? AG_BIG_FONT_FT : AG_SMALL_FONT_FT;
 	char *      sams       = alang_ams(ss);
@@ -3164,9 +2771,7 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 		int  line_width  = ag_txt_getline(s, maxwidth, isbig, &chalign, &indent, &next_indent, &eos);
 
 		if (line_width == 0)
-		{
 			break;
-		}
 
 		char *bf = ag_substring(s, line_width);
 
@@ -3179,17 +2784,11 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 
 			//-- Alignment
 			if (algn == 1)
-			{
 				cx = ldpx / 2 + x + indent;
-			}
 			else if (algn == 2)
-			{
 				cx = ldpx + x + indent;
-			}
 			else
-			{
 				cx = x + indent;
-			}
 
 			int  first_cx = cx;
 			int  sp_n     = 0;    //-- space count
@@ -3218,14 +2817,10 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 							else if (vf)
 							{
 								if (vc == ' ')
-								{
 									sp_n++;
-								}
 							}
 							else if (vc != ' ')
-							{
 								vf = 1;
-							}
 						}
 					}
 				}
@@ -3243,9 +2838,7 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 						pz++;
 
 						if (++pn > sp_n - 1)
-						{
 							pn = 0;
-						}
 					}
 				}
 			}
@@ -3263,16 +2856,12 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 					if (strcmp(tb, "/#") == 0)
 					{
 						if (!forcecolor)
-						{
 							cl = cl_def;
-						}
 					}
 					else if ((tb[0] == '#') && ((strlen(tb) == 4) || (strlen(tb) == 7)))
 					{
 						if (!forcecolor)
-						{
 							cl = strtocolor(tb);
-						}
 					}
 					else if (strcmp(tb, "*") == 0)
 					{
@@ -3283,35 +2872,21 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 							ag_draw_bullet(_b, vcx - (indentsz - ag_fontwidth(' ', isbig)), y, cl, isbig, round(indent / indentsz));
 
 							if (!first_space)
-							{
 								cx = first_cx;
-							}
 						}
 					}
 					else if (strcmp(tb, "/u") == 0)
-					{
 						undr = 0;
-					}
 					else if (strcmp(tb, "u") == 0)
-					{
 						undr = 1;
-					}
 					else if (strcmp(tb, "/b") == 0)
-					{
 						bold = 0;
-					}
 					else if (strcmp(tb, "b") == 0)
-					{
 						bold = 1;
-					}
 					else if (strcmp(tb, "/i") == 0)
-					{
 						italic = 0;
-					}
 					else if (strcmp(tb, "i") == 0)
-					{
 						italic = 1;
-					}
 					else if (strcmp(tb, "@center") == 0)
 					{
 						algn     = 1;
@@ -3350,14 +2925,10 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 									else if (vf)
 									{
 										if (vc == ' ')
-										{
 											sp_n++;
-										}
 									}
 									else if (vc != ' ')
-									{
 										vf = 1;
-									}
 								}
 							}
 
@@ -3374,9 +2945,7 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 									pz++;
 
 									if (++pn > sp_n - 1)
-									{
 										pn = 0;
-									}
 								}
 							}
 						}
@@ -3393,17 +2962,13 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 					int fwidth = 0;
 
 					if (off == '\t')
-					{
 						fwidth = ag_tabwidth(cx - x, isbig);
-					}
 					else
 					{
 						int krn = 0;
 
 						if (isfreetype)
-						{
 							krn = aft_kern(off, pc, isbig);
-						}
 
 						fwidth = ag_fontwidth(off, isbig) + krn;
 
@@ -3444,14 +3009,10 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 								rtl_off                = utf8c(rtl_line_string, &rtl_line_string, &move_main);
 
 								if ((aft_isrtl(rtl_off, 1) == 0) || (rtl_off == '<'))
-								{
 									break;
-								}
 
 								if (rtl_length > 1023)
-								{
 									break;
-								}
 							} while (rtl_off != 0);
 
 							int rtl_draw_i = 0;
@@ -3464,9 +3025,7 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 								rtl_pos -= fxw;
 
 								if (fch != ' ')
-								{
 									aft_drawfont(_b, isbig, fch, rtl_pos, y, cl, undr, bold, italic, 1);
-								}
 							}
 
 							off = rtl_last_off;
@@ -3474,9 +3033,7 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 							line_string = rtl_last_string;
 						}
 						else
-						{
 							ag_drawchar_ex(_b, cx + krn, y, off, cl, isbig, undr, bold, italic);
-						}
 					}
 
 					pc = off;
@@ -3493,35 +3050,27 @@ byte ag_text_exl(CANVAS *_b, int maxwidth, int x, int y, const char *ss, color c
 						}
 					}
 					else if (off != ' ')
-					{
 						first_space = 1;
-					}
 
 					cx += fwidth;
 				}
 			}
 
 			if (sp_v != NULL)
-			{
 				free(sp_v);
-			}
 
 			free(bf);
 		}
 
 		if (!multiline)
-		{
 			break;
-		}
 
 		indent = next_indent;
 		y += fheight;
 		s += line_width;
 
 		if (eos)
-		{
 			break;
-		}
 	}
 
 	free(sams);
@@ -3565,7 +3114,7 @@ void       ag_takescreenshoot()
 		dword color_important;
 		dword colorspace[3];
 	} BMPI;
-	
+
 	BMPH bmph;
 	BMPI bmpi;
 	memset(&bmph, 0, sizeof(BMPH));

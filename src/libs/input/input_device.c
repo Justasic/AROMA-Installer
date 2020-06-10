@@ -210,9 +210,7 @@ byte aipGetKeyPressed(int code)
 		byte bit_pos = 1 << (code % 8);
 
 		if ((_aip->key_pressed[code >> 3] & bit_pos))
-		{
 			return 1;
-		}
 
 		return 0;
 	}
